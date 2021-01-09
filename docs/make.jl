@@ -7,9 +7,9 @@ makedocs(;
     repo="https://github.com/JuliaConstraints/ConstraintDomains.jl/blob/{commit}{path}#L{line}",
     sitename="ConstraintDomains.jl",
     format=Documenter.HTML(;
-        prettyurls=get(ENV, "CI", "false") == "true",
+        prettyurls=get(ENV, "CI", nothing) == "true",
         canonical="https://JuliaConstraints.github.io/ConstraintDomains.jl",
-        assets=String[],
+        assets = ["assets/favicon.ico"; "assets/github_buttons.js"; "assets/custom.css"],
     ),
     pages=[
         "Home" => "index.md",
@@ -17,5 +17,6 @@ makedocs(;
 )
 
 deploydocs(;
-    repo="github.com/JuliaConstraints/ConstraintDomains.jl",
+    repo="github.com/JuliaConstraints/ConstraintDomains.jl.git",
+    devbranch="main"
 )
