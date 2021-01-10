@@ -10,6 +10,7 @@ uuid = "56f22d72-fd6d-98f1-02f0-08ddc0907c33"
 uuid = "2a0f44e3-6c83-55bd-87e4-b1978d98bd5f"
 
 [[ConstraintDomains]]
+deps = ["Dictionaries"]
 path = ".."
 uuid = "5800fd60-8556-4464-8d61-84ebf7a0bedb"
 version = "0.1.0"
@@ -17,6 +18,12 @@ version = "0.1.0"
 [[Dates]]
 deps = ["Printf"]
 uuid = "ade2ca70-3891-5945-98fb-dc099432e06a"
+
+[[Dictionaries]]
+deps = ["Indexing", "Random"]
+git-tree-sha1 = "73ddbf30bc6488a72c4a7a05b54f21b59c6c74fb"
+uuid = "85a47980-9c8c-11e8-2b9f-f7ca1fa99fb4"
+version = "0.3.6"
 
 [[DocStringExtensions]]
 deps = ["LibGit2", "Markdown", "Pkg", "Test"]
@@ -39,6 +46,12 @@ deps = ["Logging"]
 git-tree-sha1 = "377252859f740c217b936cebcd918a44f9b53b59"
 uuid = "b5f81e59-6552-4d32-b1f0-c071b021bf89"
 version = "0.1.1"
+
+[[Indexing]]
+deps = ["Test"]
+git-tree-sha1 = "0cf3ac621cd74b1d03af0cc4275f680b2070a5cc"
+uuid = "313cdc1a-70c2-5d6a-ae34-0150d3930a38"
+version = "1.1.0"
 
 [[InteractiveUtils]]
 deps = ["Markdown"]
