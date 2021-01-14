@@ -82,8 +82,7 @@ _domain(::Val{:indices}, values::AbstractVector) = IndicesDomain(values)
 
 """
     domain(values::AbstractVector; type = :set)
-Discrete domain constructor.
-The `type` keyword can be set to `:set` (default) or `:indices`.
+Discrete domain constructor. The `type` keyword can be set to `:set` (default) or `:indices`.
 
 ```julia
 d1 = domain([1,2,3,4], type = :indices)
