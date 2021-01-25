@@ -88,6 +88,7 @@ Discrete domain constructor. The `type` keyword can be set to `:set` (default) o
 d1 = domain([1,2,3,4], type = :indices)
 d2 = domain([53.69, 89.2, 0.12])
 d3 = domain([2//3, 89//123])
+d4 = domain(4.3)
 ```
 """
 function domain(values; type = :set)
