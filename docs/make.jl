@@ -16,7 +16,4 @@ makedocs(;
     ],
 )
 
-deploydocs(;
-    repo="github.com/JuliaConstraints/ConstraintDomains.jl.git",
-    devbranch="dev"
-)
+deploydocs(; repo="github.com/JuliaConstraints/ConstraintDomains.jl.git")
