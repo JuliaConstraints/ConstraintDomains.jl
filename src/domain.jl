@@ -25,7 +25,7 @@ struct SetDomain{T <: Number} <: DiscreteDomain{T}
     points::Set{T} # TODO: should it be Indices?
 end
 
-function SetDomain(values::AbstractVector{T}) where T <: Number
+function SetDomain(values)
     SetDomain(Set(values))
 end
 
@@ -40,8 +40,8 @@ struct IndicesDomain{T <: Number} <: DiscreteDomain{T}
     inds::Dictionary{T,Int}
 end
 
-function IndicesDomain(points::AbstractVector{T}) where T <: Number
-    inds = Dictionary{T,Int}(points, 1:length(points))
+function IndicesDomain(points)
+    inds = Dictionary(points, 1:length(points))
     IndicesDomain(points, deepcopy(inds))
 end
 
@@ -77,8 +77,8 @@ end
 
 _get_domain(d::DiscreteDomain) = d.points
 
-_domain(::Val{:set}, values::AbstractVector) = SetDomain(values)
-_domain(::Val{:indices}, values::AbstractVector) = IndicesDomain(values)
+_domain(::Val{:set}, values) = SetDomain(values)
+_domain(::Val{:indices}, values) = IndicesDomain(values)
 
 """
     domain(values::AbstractVector; type = :set)
@@ -88,8 +88,9 @@ Discrete domain constructor. The `type` keyword can be set to `:set` (default) o
 d1 = domain([1,2,3,4], type = :indices)
 d2 = domain([53.69, 89.2, 0.12])
 d3 = domain([2//3, 89//123])
+d4 = domain(4.3)
 ```
 """
-function domain(values::AbstractVector{T}; type = :set) where T <: Number
-    _domain(Val(type), values)
+function domain(values; type = :set)
+    _domain(Val(type), collect(values))
 end
