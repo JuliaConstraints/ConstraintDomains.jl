@@ -1,8 +1,11 @@
 ### Abstract Domain supertype
-abstract type AbstractDomain{T} end
+abstract type AbstractDomain end
+
+## Empty Domain
+struct EmptyDomain <: AbstractDomain end
 
 ## Abstract Continuous Domain
-abstract type ContinuousDomain{T <: AbstractFloat} <: AbstractDomain{T} end
+abstract type ContinuousDomain{T <: AbstractFloat} <: AbstractDomain end
 
 # Continuous Interval structure
 struct ContinuousInterval{T <: AbstractFloat} <: ContinuousDomain{T}
@@ -18,7 +21,7 @@ struct ContinuousIntervals{T <: AbstractFloat} <: ContinuousDomain{T}
 end
 
 ## Abstract Discrete Domain
-abstract type DiscreteDomain{T <: Number} <: AbstractDomain{T} end
+abstract type DiscreteDomain{T <: Number} <: AbstractDomain end
 
 # Set Domain
 struct SetDomain{T <: Number} <: DiscreteDomain{T}
@@ -28,11 +31,6 @@ end
 function SetDomain(values)
     SetDomain(Set(values))
 end
-
-# TODO: automatic conversion ?
-# function SetDomain(values::OrdinalRange{T}) where T <: Number
-#     SetDomain(Set(values))
-# end
 
 # Indices Domain
 struct IndicesDomain{T <: Number} <: DiscreteDomain{T}
@@ -93,4 +91,10 @@ d4 = domain(4.3)
 """
 function domain(values; type = :set)
     _domain(Val(type), collect(values))
+end
+
+_domain_size(::EmptyDomain) = 0
+function _domain_size(d)
+    min_, max_ = extrema(d.points)
+    return max_ - min_
 end
