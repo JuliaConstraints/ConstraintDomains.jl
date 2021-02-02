@@ -32,11 +32,6 @@ function SetDomain(values)
     SetDomain(Set(values))
 end
 
-# TODO: automatic conversion ?
-# function SetDomain(values::OrdinalRange{T}) where T <: Number
-#     SetDomain(Set(values))
-# end
-
 # Indices Domain
 struct IndicesDomain{T <: Number} <: DiscreteDomain{T}
     points::Vector{T}
@@ -96,4 +91,10 @@ d4 = domain(4.3)
 """
 function domain(values; type = :set)
     _domain(Val(type), collect(values))
+end
+
+_domain_size(::EmptyDomain) = 0
+function _domain_size(d)
+    min_, max_ = extrema(d.points)
+    return max_ - min_
 end
