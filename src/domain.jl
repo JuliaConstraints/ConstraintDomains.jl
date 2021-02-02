@@ -1,8 +1,11 @@
 ### Abstract Domain supertype
-abstract type AbstractDomain{T} end
+abstract type AbstractDomain end
+
+## Empty Domain
+struct EmptyDomain <: AbstractDomain end
 
 ## Abstract Continuous Domain
-abstract type ContinuousDomain{T <: AbstractFloat} <: AbstractDomain{T} end
+abstract type ContinuousDomain{T <: AbstractFloat} <: AbstractDomain end
 
 # Continuous Interval structure
 struct ContinuousInterval{T <: AbstractFloat} <: ContinuousDomain{T}
@@ -18,7 +21,7 @@ struct ContinuousIntervals{T <: AbstractFloat} <: ContinuousDomain{T}
 end
 
 ## Abstract Discrete Domain
-abstract type DiscreteDomain{T <: Number} <: AbstractDomain{T} end
+abstract type DiscreteDomain{T <: Number} <: AbstractDomain end
 
 # Set Domain
 struct SetDomain{T <: Number} <: DiscreteDomain{T}
