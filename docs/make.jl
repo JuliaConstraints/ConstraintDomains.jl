@@ -16,8 +16,4 @@ makedocs(;
     ],
 )
 
-<<<<<<< HEAD
 deploydocs(; repo="github.com/JuliaConstraints/ConstraintDomains.jl.git", devbranch = "main")
-=======
-deploydocs(; repo="github.com/JuliaConstraints/ConstraintDomains.jl.git")
->>>>>>> db25ded (Update make.jl)
