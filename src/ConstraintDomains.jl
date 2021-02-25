@@ -10,6 +10,15 @@ export DiscreteDomain, SetDomain, IndicesDomain
 export _length, _get, _draw, ∈, _delete!, _get_domain, _add!
 export _domain_size
 
-include("domain.jl")
+### Abstract Domain supertype
+abstract type AbstractDomain end
+
+## Empty Domain
+struct EmptyDomain <: AbstractDomain end
+
+
+include("continuous.jl")
+include("discrete.jl")
+include("range.jl")
 
 end
