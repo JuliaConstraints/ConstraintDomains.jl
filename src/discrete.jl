@@ -1,25 +1,3 @@
-### Abstract Domain supertype
-abstract type AbstractDomain end
-
-## Empty Domain
-struct EmptyDomain <: AbstractDomain end
-
-## Abstract Continuous Domain
-abstract type ContinuousDomain{T <: AbstractFloat} <: AbstractDomain end
-
-# Continuous Interval structure
-struct ContinuousInterval{T <: AbstractFloat} <: ContinuousDomain{T}
-    start::T
-    stop::T
-    start_open::Bool
-    stop_open::Bool
-end
-
-# Continuous Intervals
-struct ContinuousIntervals{T <: AbstractFloat} <: ContinuousDomain{T}
-    intervals::Vector{ContinuousInterval{T}}
-end
-
 ## Abstract Discrete Domain
 abstract type DiscreteDomain{T <: Number} <: AbstractDomain end
 
@@ -93,7 +71,6 @@ function domain(values; type = :set)
     _domain(Val(type), collect(values))
 end
 
-_domain_size(::EmptyDomain) = 0
 function _domain_size(d)
     min_, max_ = extrema(d.points)
     return max_ - min_
