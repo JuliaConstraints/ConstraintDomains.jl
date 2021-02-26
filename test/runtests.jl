@@ -49,4 +49,21 @@ using Test
         end
 
     end
+
+    @testset "RangeDomain" begin
+        d1 = domain(1:5)
+        d2 = domain(1:.5:5)
+        domains = Dictionary(1:2, [d1, d2])
+
+        for d in domains
+            for x in [1, 2, 3, 4, 5]
+                @test x ∈ d
+            end
+            for x in [42]
+                @test x ∉ d
+            end
+            @test _draw(d) ∈ d
+        end
+
+    end
 end
