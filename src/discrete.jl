@@ -71,7 +71,6 @@ function domain(values; type = :set)
     _domain(Val(type), collect(values))
 end
 
-_domain_size(::EmptyDomain) = 0
 function _domain_size(d)
     min_, max_ = extrema(d.points)
     return max_ - min_

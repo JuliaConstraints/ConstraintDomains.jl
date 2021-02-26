@@ -13,10 +13,8 @@ export _domain_size
 ### Abstract Domain supertype
 abstract type AbstractDomain end
 
-## Empty Domain
-struct EmptyDomain <: AbstractDomain end
-
-
+# Includes
+include("empty.jl")
 include("continuous.jl")
 include("discrete.jl")
 include("range.jl")
