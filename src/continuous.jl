@@ -5,8 +5,9 @@ struct Intervals{T <: Real} <: ContinuousDomain{T}
     intervals::Vector{Interval{T}}
 end
 
-domain(intervals::Vector{TI{T}}) where {T <: Real} = map(Interval, intervals)
-domain(a::Tuple{T, Bool}, b::Tuple{T, Bool}) where {T <: Real} = domain([a,b])
+domain(a::Tuple{T, Bool}, b::Tuple{T, Bool}) where {T <: Real} = Intervals([Interval((a,b))])
+domain(intervals::Vector{TI{T}}) where {T <: Real} = Intervals(map(f, intervals))
+# f(a::Tuple{T, Bool}, b::Tuple{T, Bool}) where {T <: Real} = Interval((a,b))
 
 get_domain(itv::Intervals) = itv.intervals
 

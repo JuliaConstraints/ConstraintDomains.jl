@@ -48,4 +48,4 @@ Base.in(value, d::D) where D <: DiscreteDomain = value ∈ get_domain(d)
 domain_size(d::D) where D <: DiscreteDomain = δ_extrema(get_domain(d))
 
 add!(d::SetDomain, val) = !(value ∈ d) && push!(d.points, val)
-delete!(d::SetDomain, value) = pop!(get_domain(d), value)
+Base.delete!(d::SetDomain, value) = pop!(get_domain(d), value)

@@ -7,7 +7,7 @@ using PatternFolds: Interval, value
 # Functions exports
 export domain
 export domain_size
-export add!, delete!
+export add!, delete!, set_domain!
 
 # Includes
 include("utils.jl")

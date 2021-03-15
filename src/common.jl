@@ -30,5 +30,5 @@ Base.rand(::D) where D <: AbstractDomain = @error "rand is not defined" d
 Base.length(::D) where D <: AbstractDomain = 0
 Base.isempty(d::D) where D <: AbstractDomain = length(d) == 0
 
-domain_size(::D) where D <: AbstractDomain = length(d)
+domain_size(d::D) where D <: AbstractDomain = length(d)
 
