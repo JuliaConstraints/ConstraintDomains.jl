@@ -1,31 +1,32 @@
 ## Abstract Continuous Domain
 abstract type ContinuousDomain{T <: Real} <: AbstractDomain end
 
-# Continuous Interval structure
-struct ContinuousInterval{TA <: Real, TB <: Real} <: ContinuousDomain{Union{TA,TB}}
-    a::Tuple{TA, Bool}
-    b::Tuple{TB, Bool}
-end
-
-# Continuous Intervals
 struct Intervals{T <: Real} <: ContinuousDomain{T}
-    intervals::Set{ContinuousInterval{T}}
+    intervals::Vector{Interval{T}}
 end
 
-lesser(a::Tuple, x) = a[2] ? a[1] ≤ x : a[1] < x
-greater(b::Tuple, x) = b[2] ? b[1] ≥ x : b[1] > x
+domain(intervals::Vector{TI{T}}) where {T <: Real} = map(Interval, intervals)
+domain(a::Tuple{T, Bool}, b::Tuple{T, Bool}) where {T <: Real} = domain([a,b])
 
-_length(ci::ContinuousInterval) = ci.b[1] - ci.a[1]
-_get_domain(ci::ContinuousInterval) = (ci.a, ci.b)
-get_bounds(ci) = ci.a[1], ci.b[1]
-_draw(ci::ContinuousInterval) = rand() * _length(ci) + ci.a[1]
-∈(x, ci::ContinuousInterval) = lesser(ci.a, x) && greater(ci.b, x)
+get_domain(itv::Intervals) = itv.intervals
 
-_domain(::Val{:continuous}, a, b) = ContinuousInterval(a , b)
-function _domain(::Val{:continuous}, a::TA, b::TB) where {TA <: Real, TB <: Real}
-    return _domain(Val(:continuous), (a, true), (b, true))
+Base.length(itv::Intervals) = sum(size, get_domain(itv); init = 0)
+
+Base.rand(itv::Intervals, i) = rand(get_domain(itv)[i])
+function Base.rand(itv::Intervals)
+    r = length(itv) * rand()
+    weight = 0.0
+    for i in get_domain(itv)
+        weight += size(i)
+        weight > r && return rand(i)
+    end
+    return rand(itv, 1)
 end
 
-_domain_size(ci::ContinuousInterval) = ci.b[1] - ci.a[1]
+Base.in(x, itv::Intervals) = any(i -> x ∈ i, get_domain(itv))
 
-domain(; a, b) = _domain(Val(:continuous), a, b)
+function domain_size(itv::Intervals)
+    itv_min = minimum(i -> PatternFolds.value(i, :a), get_domain(itv))
+    itv_max = maximum(i -> PatternFolds.value(i, :b), get_domain(itv))
+    return itv_max - itv_min
+end

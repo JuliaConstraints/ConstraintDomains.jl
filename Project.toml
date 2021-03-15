@@ -1,14 +1,15 @@
 name = "ConstraintDomains"
 uuid = "5800fd60-8556-4464-8d61-84ebf7a0bedb"
 authors = ["Jean-François Baffier"]
-version = "0.1.6"
+version = "0.1.7"
 
 [deps]
 Dictionaries = "85a47980-9c8c-11e8-2b9f-f7ca1fa99fb4"
+PatternFolds = "c18a7f1d-76ad-4ce4-950d-5419b888513b"
 
 [compat]
 Dictionaries = "0.3"
-julia = "1.5, 1.6"
+julia = "1.6"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
