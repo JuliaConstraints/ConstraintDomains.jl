@@ -1,31 +1,74 @@
-## Abstract Continuous Domain
+"""
+    ContinuousDomain{T <: Real} <: AbstractDomain
+An abstract supertype for all continuous domains.
+"""
 abstract type ContinuousDomain{T <: Real} <: AbstractDomain end
 
-# Continuous Interval structure
-struct ContinuousInterval{TA <: Real, TB <: Real} <: ContinuousDomain{Union{TA,TB}}
-    a::Tuple{TA, Bool}
-    b::Tuple{TB, Bool}
-end
-
-# Continuous Intervals
+"""
+    Intervals{T <: Real} <: ContinuousDomain{T}
+An encapsuler to store a vector of `PatternFolds.Interval`. Dynamic changes to `Intervals` are not handled yet.
+"""
 struct Intervals{T <: Real} <: ContinuousDomain{T}
-    intervals::Set{ContinuousInterval{T}}
+    domain::Vector{Interval{T}}
 end
 
-lesser(a::Tuple, x) = a[2] ? a[1] ≤ x : a[1] < x
-greater(b::Tuple, x) = b[2] ? b[1] ≥ x : b[1] > x
+"""
+    domain(a::Tuple{T, Bool}, b::Tuple{T, Bool}) where {T <: Real}
+    domain(intervals::Vector{Tuple{Tuple{T, Bool},Tuple{T, Bool}}}) where {T <: Real}
+Construct a domain of continuous interval(s).
+```julia
+d1 = domain((0., true), (1., false)) # d1 = [0, 1)
+d2 = domain([ # d2 = [0, 1) ∪ (3.5, 42]
+    (0., true), (1., false),
+    (3.5, false), (42., true),
+])
+"""
+function domain(intervals::Vector{Tuple{Tuple{T, Bool},Tuple{T, Bool}}}) where {T <: Real}
+    return Intervals(map(i -> Interval(i...), intervals))
+end
+domain(a::Tuple{T, Bool}, b::Tuple{T, Bool}) where {T <: Real} = domain([(a,b)])
 
-_length(ci::ContinuousInterval) = ci.b[1] - ci.a[1]
-_get_domain(ci::ContinuousInterval) = (ci.a, ci.b)
-get_bounds(ci) = ci.a[1], ci.b[1]
-_draw(ci::ContinuousInterval) = rand() * _length(ci) + ci.a[1]
-∈(x, ci::ContinuousInterval) = lesser(ci.a, x) && greater(ci.b, x)
+"""
+    Base.length(itv::Intervals)
+Return the sum of the length of each interval in `itv`.
+"""
+Base.length(itv::Intervals) = sum(size, get_domain(itv); init = 0)
 
-_domain(::Val{:continuous}, a, b) = ContinuousInterval(a , b)
-function _domain(::Val{:continuous}, a::TA, b::TB) where {TA <: Real, TB <: Real}
-    return _domain(Val(:continuous), (a, true), (b, true))
+"""
+    Base.rand(itv::Intervals)
+    Base.rand(itv::Intervals, i)
+Return a random value from `itv`, specifically from the `i`th interval if `i` is specified.
+"""
+Base.rand(itv::Intervals, i::Int) = rand(get_domain(itv)[i])
+function Base.rand(itv::Intervals{T}) where {T <: Real}
+    r = length(itv) * rand()
+    weight = 0.0
+    result = zero(T)
+    for i in get_domain(itv)
+        weight += size(i)
+        if weight > r
+            result = rand(i)
+        end
+    end
+    return result
 end
 
-_domain_size(ci::ContinuousInterval) = ci.b[1] - ci.a[1]
+"""
+    Base.in(x, itv::Intervals)
+Return `true` if `x ∈ I` for any 'I ∈ itv`, false otherwise. `x ∈ I` is equivalent to
+- `a < x < b` if `I = (a, b)`
+- `a < x ≤ b` if `I = (a, b]`
+- `a ≤ x < b` if `I = [a, b)`
+- `a ≤ x ≤ b` if `I = [a, b]`
+"""
+Base.in(x, itv::Intervals) = any(i -> x ∈ i, get_domain(itv))
 
-domain(; a, b) = _domain(Val(:continuous), a, b)
+"""
+    domain_size(itv::Intervals)
+Return the difference between the highest and lowest values in `itv`.
+"""
+function domain_size(itv::Intervals)
+    itv_min = minimum(i -> value(i, :a), get_domain(itv))
+    itv_max = maximum(i -> value(i, :b), get_domain(itv))
+    return itv_max - itv_min
+end

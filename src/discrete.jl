@@ -1,77 +1,72 @@
-## Abstract Discrete Domain
+"""
+    DiscreteDomain{T <: Number} <: AbstractDomain
+An abstract supertype for discrete domains (set, range).
+"""
 abstract type DiscreteDomain{T <: Number} <: AbstractDomain end
 
-# Set Domain
+"""
+    SetDomain{T <: Number} <: DiscreteDomain{T}
+Domain that stores discrete values as a set of (unordered) points.
+"""
 struct SetDomain{T <: Number} <: DiscreteDomain{T}
-    points::Set{T} # TODO: should it be Indices?
+    domain::Set{T}
 end
-
-function SetDomain(values)
-    SetDomain(Set(values))
-end
-
-# Indices Domain
-struct IndicesDomain{T <: Number} <: DiscreteDomain{T}
-    points::Vector{T}
-    inds::Dictionary{T,Int}
-end
-
-function IndicesDomain(points)
-    inds = Dictionary(points, 1:length(points))
-    IndicesDomain(points, deepcopy(inds))
-end
-
-### Methods
-_length(d::DiscreteDomain) = length(d.points)
-_get(d::IndicesDomain, index::Int) = d.points[index]
-_draw(d::DiscreteDomain) = rand(d.points)
-∈(value::Number, d::DiscreteDomain) = value ∈ d.points
-_delete!(d::SetDomain{T}, value::T) where {T <: Number} = pop!(d.points, value)
-
-# TODO: implement delete! for ContinuousDomain
-function _delete!(d::IndicesDomain{T}, value::T) where T <: Number
-    index = get(d.inds, value, 0)
-    if index > 0
-        deleteat!(d.points, index)
-        delete!(d.inds, value)
-        map(((k,v),) -> v < index ? v : v - 1, pairs(d.inds))
-    end
-end
-
-function _add!(d::SetDomain{T}, value::T) where {T <: Number}
-    if !(value ∈ d)
-        push!(d.points, value)
-    end
-end
-
-function _add!(d::IndicesDomain{T}, value::T) where {T <: Number}
-    if !(value ∈ d)
-        push!(d.points, value)
-        insert!(d.inds, value, length(d.points))
-    end
-end
-
-_get_domain(d::DiscreteDomain) = d.points
-
-_domain(::Val{:set}, values) = SetDomain(values)
-_domain(::Val{:indices}, values) = IndicesDomain(values)
+SetDomain(values) = SetDomain(Set(values))
 
 """
-    domain(values::AbstractVector; type = :set)
-Discrete domain constructor. The `type` keyword can be set to `:set` (default) or `:indices`.
+    RangeDomain
+A discrete domain defined by a `range <: AbstractRange{Real}`. As ranges are immutable in Julia, changes in `RangeDomain` must use [`set_domain!`](@ref).
+"""
+struct RangeDomain{T <: Real, R <: AbstractRange{T}} <: DiscreteDomain{T}
+    domain::R
+end
 
+"""
+    domain(values)
+    domain(range::R) where {T <: Real, R <: AbstractRange{T}}
+Construct either a [`SetDomain`](@ref) or a [RangeDomain](@ref).
 ```julia
-d1 = domain([1,2,3,4], type = :indices)
+d1 = domain(1:5)
 d2 = domain([53.69, 89.2, 0.12])
 d3 = domain([2//3, 89//123])
 d4 = domain(4.3)
 ```
 """
-function domain(values; type = :set)
-    _domain(Val(type), collect(values))
-end
+domain(values) = SetDomain(values)
+domain(range::R) where {T <: Real, R <: AbstractRange{T}} = RangeDomain{T, R}(range)
 
-function _domain_size(d)
-    min_, max_ = extrema(d.points)
-    return max_ - min_
-end
+"""
+    Base.length(d::D) where D <: DiscreteDomain
+Return the number of points in `d`.
+"""
+Base.length(d::D) where D <: DiscreteDomain = length(get_domain(d))
+
+"""
+    Base.rand(d::D) where D <: DiscreteDomain
+Draw randomly a point in `d`.
+"""
+Base.rand(d::D) where D <: DiscreteDomain = rand(get_domain(d))
+
+"""
+    Base.in(value, d::D) where D <: DiscreteDomain
+Return `true` if `value` is a point of `d`.
+"""
+Base.in(value, d::D) where D <: DiscreteDomain = value ∈ get_domain(d)
+
+"""
+    domain_size(d::D) where D <: DiscreteDomain
+Return the maximum distance between two points in `d`.
+"""
+domain_size(d::D) where D <: DiscreteDomain = δ_extrema(get_domain(d))
+
+"""
+    add!(d::SetDomain, value)
+Add `value` to the list of points in `d`.
+"""
+add!(d::SetDomain, value) = !(value ∈ d) && push!(get_domain(d), value)
+
+"""
+    Base.delete!(d::SetDomain, value)(d::SetDomain, value)
+Delete `value` from the list of points in `d`.
+"""
+Base.delete!(d::SetDomain, value) = pop!(get_domain(d), value)

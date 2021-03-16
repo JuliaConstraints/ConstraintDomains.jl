@@ -1,22 +1,18 @@
 module ConstraintDomains
 
 # Imports
-import Dictionaries: Dictionary
-import Base: ∈
+using Dictionaries: Dictionary
+using PatternFolds: Interval, value
 
-export domain, AbstractDomain, EmptyDomain
-export ContinuousDomain, ContinuousInterval, ContinuousIntervals
-export DiscreteDomain, SetDomain, IndicesDomain
-export _length, _get, _draw, ∈, _delete!, _get_domain, _add!
-export _domain_size
-
-### Abstract Domain supertype
-abstract type AbstractDomain end
+# Functions exports
+export domain
+export domain_size
+export add!, delete!
 
 # Includes
-include("empty.jl")
+include("utils.jl")
+include("common.jl")
 include("continuous.jl")
 include("discrete.jl")
-include("range.jl")
 
 end
