@@ -4,8 +4,9 @@ CurrentModule = ConstraintDomains
 
 # ConstraintDomains
 
-Currently only discrete domains are supported using the following function.
+```@index
+```
 
-```@docs
-ConstraintDomains.domain
+```@autodocs
+Modules = [ConstraintDomains]
 ```
