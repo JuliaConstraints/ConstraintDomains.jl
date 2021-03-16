@@ -7,7 +7,6 @@ An abstract super type for any domain type. A domain type `D <: AbstractDomain` 
 Addtionally, if the domain is used in a dynamic context, it can extend
 - `add!(::D, args)`
 - `delete!(::D, args)`
-- `set_domain!(::D, args)`
 where `args` depends on `D`'s structure
 """
 abstract type AbstractDomain end
@@ -54,3 +53,8 @@ Fallback method for `domain_size(d)` that return `length(d)`.
 """
 domain_size(d::D) where D <: AbstractDomain = length(d)
 
+"""
+    get_domain(::AbstractDomain)
+Access the internal structure of any domain type.
+"""
+get_domain(d::D) where {D <: AbstractDomain} = d.domain

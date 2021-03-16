@@ -9,7 +9,7 @@ abstract type ContinuousDomain{T <: Real} <: AbstractDomain end
 An encapsuler to store a vector of `PatternFolds.Interval`. Dynamic changes to `Intervals` are not handled yet.
 """
 struct Intervals{T <: Real} <: ContinuousDomain{T}
-    intervals::Vector{Interval{T}}
+    domain::Vector{Interval{T}}
 end
 
 """
@@ -27,12 +27,6 @@ function domain(intervals::Vector{Tuple{Tuple{T, Bool},Tuple{T, Bool}}}) where {
     return Intervals(map(i -> Interval(i...), intervals))
 end
 domain(a::Tuple{T, Bool}, b::Tuple{T, Bool}) where {T <: Real} = domain([(a,b)])
-
-"""
-    get_domain(itv::Intervals)
-Access the list of intervals of `itv`.
-"""
-get_domain(itv::Intervals) = itv.intervals
 
 """
     Base.length(itv::Intervals)
