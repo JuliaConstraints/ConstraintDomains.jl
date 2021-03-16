@@ -31,12 +31,6 @@ Base.in(value, ::D) where D <: AbstractDomain = false
 
 """
     Base.rand(d <: AbstractDomain)
-Fallback method for `rand(d)` that rise an `error`.
-"""
-Base.rand(::D) where D <: AbstractDomain = @error "rand is not defined" d
-
-"""
-    Base.rand(d <: AbstractDomain)
 Fallback method for `length(d)` that return `0`.
 """
 Base.length(::D) where D <: AbstractDomain = 0

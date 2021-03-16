@@ -12,7 +12,9 @@ using Test
 
     @testset "DiscreteDomain" begin
         d1 = domain([4,3,2,1])
-        domains = Dictionary(1:1, [d1])
+        d2 = domain(1)
+        foreach(i -> add!(d2, i), 2:4)
+        domains = Dictionary(1:2, [d1, d2])
 
         for d in domains
         # constructors and ∈
