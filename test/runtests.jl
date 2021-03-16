@@ -29,6 +29,7 @@ using Test
         # delete!
             delete!(d, 5)
             @test 5 ∉ d
+            @test domain_size(d) == 3
         end
     end
 
@@ -49,6 +50,8 @@ using Test
                 @test x ∉ d
             end
             @test rand(d) ∈ d
+            @test rand(d, 1) ∈ d
+            @test domain_size(d) > 0.0
         end
 
     end

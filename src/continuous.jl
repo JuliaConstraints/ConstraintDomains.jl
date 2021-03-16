@@ -39,15 +39,16 @@ Base.length(itv::Intervals) = sum(size, get_domain(itv); init = 0)
     Base.rand(itv::Intervals, i)
 Return a random value from `itv`, specifically from the `i`th interval if `i` is specified.
 """
-Base.rand(itv::Intervals, i) = rand(get_domain(itv)[i])
+Base.rand(itv::Intervals{T}, i) where T = rand(get_domain(itv)[i])
 function Base.rand(itv::Intervals)
     r = length(itv) * rand()
     weight = 0.0
+    result = zero(T)
     for i in get_domain(itv)
         weight += size(i)
-        weight > r && return rand(i)
+        weight > r && result = rand(i)
     end
-    return rand(itv, 1)
+    return result
 end
 
 """
