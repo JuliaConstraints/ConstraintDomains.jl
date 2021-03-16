@@ -39,14 +39,16 @@ Base.length(itv::Intervals) = sum(size, get_domain(itv); init = 0)
     Base.rand(itv::Intervals, i)
 Return a random value from `itv`, specifically from the `i`th interval if `i` is specified.
 """
-Base.rand(itv::Intervals{T}, i) where T = rand(get_domain(itv)[i])
-function Base.rand(itv::Intervals)
+Base.rand(itv::Intervals, i::Int) = rand(get_domain(itv)[i])
+function Base.rand(itv::Intervals{T}) where {T <: Real}
     r = length(itv) * rand()
     weight = 0.0
     result = zero(T)
     for i in get_domain(itv)
         weight += size(i)
-        weight > r && result = rand(i)
+        if weight > r
+            result = rand(i)
+        end
     end
     return result
 end
@@ -66,7 +68,7 @@ Base.in(x, itv::Intervals) = any(i -> x ∈ i, get_domain(itv))
 Return the difference between the highest and lowest values in `itv`.
 """
 function domain_size(itv::Intervals)
-    itv_min = minimum(i -> PatternFolds.value(i, :a), get_domain(itv))
-    itv_max = maximum(i -> PatternFolds.value(i, :b), get_domain(itv))
+    itv_min = minimum(i -> value(i, :a), get_domain(itv))
+    itv_max = maximum(i -> value(i, :b), get_domain(itv))
     return itv_max - itv_min
 end
