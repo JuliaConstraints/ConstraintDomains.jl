@@ -12,6 +12,3 @@ end
 Extends `Set` constructor to accept multiple args.
 """
 Base.Set(x...) = Set(x)
-
-# Type simplification
-const TI{T} = Tuple{Tuple{T, Bool},Tuple{T, Bool}}

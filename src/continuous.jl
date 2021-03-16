@@ -6,7 +6,7 @@ struct Intervals{T <: Real} <: ContinuousDomain{T}
 end
 
 domain(a::Tuple{T, Bool}, b::Tuple{T, Bool}) where {T <: Real} = Intervals([Interval(a,b)])
-function domain(intervals::Vector{TI{T}}) where {T <: Real}
+function domain(intervals::Vector{Tuple{Tuple{T, Bool},Tuple{T, Bool}}}) where {T <: Real}
     return Intervals(map(i -> Interval(i...), intervals))
 end
 

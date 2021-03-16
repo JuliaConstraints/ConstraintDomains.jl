@@ -24,11 +24,33 @@ Construct an [`EmptyDomain`](@ref).
 """
 domain() = EmptyDomain()
 
-# Generic fallback methods
+"""
+    Base.in(value, d <: AbstractDomain)
+Fallback method for `value ∈ d` that returns `false`.
+"""
 Base.in(value, ::D) where D <: AbstractDomain = false
+
+"""
+    Base.rand(d <: AbstractDomain)
+Fallback method for `rand(d)` that rise an `error`.
+"""
 Base.rand(::D) where D <: AbstractDomain = @error "rand is not defined" d
+
+"""
+    Base.rand(d <: AbstractDomain)
+Fallback method for `length(d)` that return `0`.
+"""
 Base.length(::D) where D <: AbstractDomain = 0
+
+"""
+    Base.isempty(d <: AbstractDomain)
+Fallback method for `isempty(d)` that return `length(d) == 0` which default to `0`.
+"""
 Base.isempty(d::D) where D <: AbstractDomain = length(d) == 0
 
+"""
+    domain_size(d <: AbstractDomain)
+Fallback method for `domain_size(d)` that return `length(d)`.
+"""
 domain_size(d::D) where D <: AbstractDomain = length(d)
 
