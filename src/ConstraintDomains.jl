@@ -1,12 +1,13 @@
 module ConstraintDomains
 
 # Imports
-using Dictionaries: Dictionary
-using PatternFolds: Interval, value
+using Dictionaries
+using PatternFolds
 
 # Functions exports
 export domain
 export domain_size
+export get_domain
 export add!, delete!
 
 # Includes
