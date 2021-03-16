@@ -32,22 +32,26 @@ using Test
         end
     end
 
-    # @testset "ContinuousDomain" begin
-    #     d1 = domain((1.0, true), (3.15, true))
-    #     d2 = domain((-42.42, false), (5.0, false))
-    #     domains = Dictionary(1:2, [d1, d2])
+    @testset "ContinuousDomain" begin
+        d1 = domain((1.0, true), (3.15, true))
+        d2 = domain((-42.42, false), (5.0, false))
+        d3 = domain([
+            ((1.0, true), (3.15, true)),
+            ((-42.42, false), (5.0, false)),
+        ])
+        domains = Dictionary(1:2, [d1, d2])
 
-    #     for d in domains
-    #         for x in [1, 2.3, π]
-    #             @test x ∈ d
-    #         end
-    #         for x in [5.1, π^π, Inf]
-    #             @test x ∉ d
-    #         end
-    #         @test rand(d) ∈ d
-    #     end
+        for d in domains
+            for x in [1, 2.3, π]
+                @test x ∈ d
+            end
+            for x in [5.1, π^π, Inf]
+                @test x ∉ d
+            end
+            @test rand(d) ∈ d
+        end
 
-    # end
+    end
 
     @testset "RangeDomain" begin
         d1 = domain(1:5)

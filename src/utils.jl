@@ -7,7 +7,10 @@ function δ_extrema(x)
     return δ_max - δ_min
 end
 
-# Simply extend set constructor to accept tuple of entries
+"""
+    Base.Set(x...)
+Extends `Set` constructor to accept multiple args.
+"""
 Base.Set(x...) = Set(x)
 
 # Type simplification
