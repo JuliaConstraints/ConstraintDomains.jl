@@ -88,4 +88,7 @@ function merge_domains(d₁::D1, d₂::D2) where {D1 <: DiscreteDomain, D2 <: Di
     return union(get_domain(d₁), get_domain(d₂))
 end
 
-intersect_domains(d₁,d₂) = intersect(get_domain(d₁), get_domain(d₂))
+function intersect_domains(d₁::D1,d₂::D2
+) where {D1 <: DiscreteDomain, D2 <: DiscreteDomain}
+    return intersect(get_domain(d₁), get_domain(d₂))
+end
