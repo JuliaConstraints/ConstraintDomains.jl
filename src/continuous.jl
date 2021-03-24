@@ -27,6 +27,7 @@ function domain(intervals::Vector{Tuple{Tuple{T, Bool},Tuple{T, Bool}}}) where {
     return Intervals(map(i -> Interval(i...), intervals))
 end
 domain(a::Tuple{T, Bool}, b::Tuple{T, Bool}) where {T <: Real} = domain([(a,b)])
+domain(intervals::Vector{Interval{T}}) where T = Intervals{T}(intervals)
 
 """
     Base.length(itv::Intervals)
@@ -74,4 +75,28 @@ function domain_size(itv::Intervals)
 end
 
 function merge_domains(d1::D, d2::D) where {D <: ContinuousDomain}
+
+end
+
+
+
+function intersect_domains(i₁::I1,i₂::I2) where {I1 <: Interval, I2 <: Interval}
+    a = PatternFolds.a_isless(i₁[1], i₂[1]) ? i₂[1] : i₁[1]
+    b = PatternFolds.b_isless(i₁[2], i₂[2]) ? i₁[2] : i₂[2]
+    return Interval(a, b)
+end
+
+function intersect_domains!(is::IS,i::I, new_itvls) where {IS <: Intervals, I <: Interval}
+    for interval in get_domain(is)
+        intersection = intersect_domains(interval, i)
+        !isempty(intersection) && push!(new_itvls, intersection)
+    end
+end
+
+function intersect_domains(d₁::D,d₂::D) where {T <: Real, D <: ContinuousDomain{T}}
+    new_itvls = Intervals(Vector{Interval{T}}())
+    for i in get_domain(d₂)
+        intersect_domains!(d₁, i, new_itvls)
+    end
+    return Intervals(new_itvls)
 end
