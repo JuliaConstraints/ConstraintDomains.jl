@@ -70,3 +70,22 @@ add!(d::SetDomain, value) = !(value ∈ d) && push!(get_domain(d), value)
 Delete `value` from the list of points in `d`.
 """
 Base.delete!(d::SetDomain, value) = pop!(get_domain(d), value)
+
+function merge_domains(rd₁::RangeDomain, rd₂::RangeDomain)
+    d₁ = get_domain(rd₁)
+    d₂ = get_domain(rd₂)
+    if step(d₁) == step(d₂) == 1
+        a₁, b₁ = extrema(d₁)
+        a₂, b₂ = extrema(d₂)
+        a₂ < a₁ && return merge_domains(rd₂, rd₁)
+        b₂ ≤ b₁ && return d₁
+        a₂ ≤ b₁ + 1 && return a₁:b₂
+    end
+    return merge_domains(domain(Set(d₁)), rd₂)
+end
+merge_domains(rd::RangeDomain, d::D) where {D <: DiscreteDomain} = merge_domains(d, rd)
+function merge_domains(d₁::D1, d₂::D2) where {D1 <: DiscreteDomain, D2 <: DiscreteDomain}
+    return union(get_domain(d₁), get_domain(d₂))
+end
+
+intersect_domains(d₁,d₂) = intersect(get_domain(d₁), get_domain(d₂))

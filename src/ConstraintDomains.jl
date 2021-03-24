@@ -10,6 +10,7 @@ export domain
 export domain_size
 export get_domain
 export add!, delete!
+export merge_domains, intersect_domains
 
 # Includes
 include("utils.jl")

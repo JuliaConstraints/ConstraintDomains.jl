@@ -72,3 +72,6 @@ function domain_size(itv::Intervals)
     itv_max = maximum(i -> value(i, :b), get_domain(itv))
     return itv_max - itv_min
 end
+
+function merge_domains(d1::D, d2::D) where {D <: ContinuousDomain}
+end
