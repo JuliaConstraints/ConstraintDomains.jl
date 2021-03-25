@@ -5,7 +5,7 @@ using Dictionaries
 using PatternFolds
 
 # Functions exports
-export AbstractDomain
+export AbstractDomain, ContinuousDomain, DiscreteDomain, RangeDomain, DiscreteSet, Intervals
 export domain
 export domain_size
 export get_domain
