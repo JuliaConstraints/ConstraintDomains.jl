@@ -17,5 +17,6 @@ include("utils.jl")
 include("common.jl")
 include("continuous.jl")
 include("discrete.jl")
+include("general.jl")
 
 end

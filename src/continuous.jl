@@ -78,11 +78,10 @@ function merge_domains(d1::D, d2::D) where {D <: ContinuousDomain}
 
 end
 
-
-
 function intersect_domains(i₁::I1,i₂::I2) where {I1 <: Interval, I2 <: Interval}
-    a = PatternFolds.a_isless(i₁[1], i₂[1]) ? i₂[1] : i₁[1]
-    b = PatternFolds.b_isless(i₁[2], i₂[2]) ? i₁[2] : i₂[2]
+    # @warn "a_isless" i₁ i₂
+    a = value(a_ismore(i₁, i₂) ? i₁ : i₂, :a)
+    b = value(b_isless(i₁, i₂) ? i₁ : i₂, :b)
     return Interval(a, b)
 end
 
