@@ -27,7 +27,7 @@ function domain(intervals::Vector{Tuple{Tuple{T, Bool},Tuple{T, Bool}}}) where {
     return Intervals(map(i -> Interval(i...), intervals))
 end
 domain(a::Tuple{T, Bool}, b::Tuple{T, Bool}) where {T <: Real} = domain([(a,b)])
-domain(intervals::Vector{Interval{T}}) where T = Intervals{T}(intervals)
+domain(intervals::Vector{I}) where {I <: Interval} = Intervals(intervals)
 
 """
     Base.length(itv::Intervals)
@@ -79,9 +79,8 @@ function merge_domains(d1::D, d2::D) where {D <: ContinuousDomain}
 end
 
 function intersect_domains(i₁::I1,i₂::I2) where {I1 <: Interval, I2 <: Interval}
-    # @warn "a_isless" i₁ i₂
-    a = value(a_ismore(i₁, i₂) ? i₁ : i₂, :a)
-    b = value(b_isless(i₁, i₂) ? i₁ : i₂, :b)
+    a = a_ismore(i₁, i₂) ? i₁.a : i₂.a
+    b = b_isless(i₁, i₂) ? i₁.b : i₂.b
     return Interval(a, b)
 end
 
@@ -93,7 +92,7 @@ function intersect_domains!(is::IS,i::I, new_itvls) where {IS <: Intervals, I <:
 end
 
 function intersect_domains(d₁::D,d₂::D) where {T <: Real, D <: ContinuousDomain{T}}
-    new_itvls = Intervals(Vector{Interval{T}}())
+    new_itvls = Vector{Interval{T}}()
     for i in get_domain(d₂)
         intersect_domains!(d₁, i, new_itvls)
     end
