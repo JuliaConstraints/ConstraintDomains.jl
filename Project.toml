@@ -5,11 +5,13 @@ version = "0.2.5"
 
 [deps]
 Dictionaries = "85a47980-9c8c-11e8-2b9f-f7ca1fa99fb4"
+Intervals = "d8418881-c3e1-53bb-8760-2df7ec849ed5"
 PatternFolds = "c18a7f1d-76ad-4ce4-950d-5419b888513b"
+Reexport = "189a3867-3050-52da-a836-e630ba90ab69"
 
 [compat]
 Dictionaries = "0.3"
-PatternFolds = "0.1"
+PatternFolds = "0.2"
 julia = "1.6"
 
 [extras]

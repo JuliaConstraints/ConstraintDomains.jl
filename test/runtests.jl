@@ -1,5 +1,6 @@
 using ConstraintDomains
 using Dictionaries
+using Intervals
 using Test
 
 @testset "ConstraintDomains.jl" begin
@@ -36,12 +37,9 @@ using Test
     end
 
     @testset "ContinuousDomain" begin
-        d1 = domain((1.0, true), (3.15, true))
-        d2 = domain((-42.42, false), (5.0, false))
-        d3 = domain([
-            ((1.0, true), (3.15, true)),
-            ((-42.42, false), (5.0, false)),
-        ])
+        d1 = domain(1.0..3.15)
+        d2 = domain(Interval{Open, Open}(-42.42, 5.0))
+        # d3 = domain([d1, d2])
         domains = Dictionary(1:2, [d1, d2])
 
         for d in domains
