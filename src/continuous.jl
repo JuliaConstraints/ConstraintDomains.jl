@@ -2,14 +2,14 @@
     ContinuousDomain{T <: Real} <: AbstractDomain
 An abstract supertype for all continuous domains.
 """
-abstract type ContinuousDomain{T <: Real} <: AbstractDomain end
+abstract type ContinuousDomain{T<:Real} <: AbstractDomain end
 
 """
     Intervals{T <: Real} <: ContinuousDomain{T}
 An encapsuler to store a vector of `PatternFolds.Interval`. Dynamic changes to `Intervals` are not handled yet.
 """
-struct Intervals{T <: Real} <: ContinuousDomain{T}
-    domain::Vector{Interval{T}}
+struct Intervals{T<:Real,L,R} <: ContinuousDomain{T}
+    domain::Vector{Interval{T,L,R}}
 end
 
 """
@@ -23,17 +23,17 @@ d2 = domain([ # d2 = [0, 1) ∪ (3.5, 42]
     (3.5, false), (42., true),
 ])
 """
-function domain(intervals::Vector{Tuple{Tuple{T, Bool},Tuple{T, Bool}}}) where {T <: Real}
-    return Intervals(map(i -> Interval(i...), intervals))
+function domain(intervals::Vector{Interval{T,L,R}}) where {T<:Real,L,R}
+    return Intervals(map(i -> Interval(i), intervals))
 end
-domain(a::Tuple{T, Bool}, b::Tuple{T, Bool}) where {T <: Real} = domain([(a,b)])
-domain(intervals::Vector{I}) where {I <: Interval} = Intervals(intervals)
+domain(interval::Interval) = domain([interval])
+domain(intervals::Vector{I}) where {I<:Interval} = Intervals(intervals)
 
 """
     Base.length(itv::Intervals)
 Return the sum of the length of each interval in `itv`.
 """
-Base.length(itv::Intervals) = sum(size, get_domain(itv); init = 0)
+Base.length(itv::Intervals) = sum(size, get_domain(itv); init=0)
 
 """
     Base.rand(itv::Intervals)
@@ -41,7 +41,7 @@ Base.length(itv::Intervals) = sum(size, get_domain(itv); init = 0)
 Return a random value from `itv`, specifically from the `i`th interval if `i` is specified.
 """
 Base.rand(itv::Intervals, i::Int) = rand(get_domain(itv)[i])
-function Base.rand(itv::Intervals{T}) where {T <: Real}
+function Base.rand(itv::Intervals{T}) where {T<:Real}
     r = length(itv) * rand()
     weight = 0.0
     result = zero(T)
@@ -69,32 +69,31 @@ Base.in(x, itv::Intervals) = any(i -> x ∈ i, get_domain(itv))
 Return the difference between the highest and lowest values in `itv`.
 """
 function domain_size(itv::Intervals)
-    itv_min = minimum(i -> value(i, :a), get_domain(itv))
-    itv_max = maximum(i -> value(i, :b), get_domain(itv))
-    return itv_max - itv_min
+    return maximum(last, get_domain(itv)) - minimum(first, get_domain(itv))
 end
 
-function merge_domains(d1::D, d2::D) where {D <: ContinuousDomain}
-
+function merge_domains(d1::D, d2::D) where {D<:ContinuousDomain}
 end
 
-function intersect_domains(i₁::I1,i₂::I2) where {I1 <: Interval, I2 <: Interval}
+function intersect_domains(i₁::I1, i₂::I2) where {I1<:Interval,I2<:Interval}
     a = a_ismore(i₁, i₂) ? i₁.a : i₂.a
     b = b_isless(i₁, i₂) ? i₁.b : i₂.b
     return Interval(a, b)
 end
 
-function intersect_domains!(is::IS,i::I, new_itvls) where {IS <: Intervals, I <: Interval}
+function intersect_domains!(is::IS, i::I, new_itvls) where {IS<:Intervals,I<:Interval}
     for interval in get_domain(is)
         intersection = intersect_domains(interval, i)
         !isempty(intersection) && push!(new_itvls, intersection)
     end
 end
 
-function intersect_domains(d₁::D,d₂::D) where {T <: Real, D <: ContinuousDomain{T}}
+function intersect_domains(d₁::D, d₂::D) where {T<:Real,D<:ContinuousDomain{T}}
     new_itvls = Vector{Interval{T}}()
     for i in get_domain(d₂)
         intersect_domains!(d₁, i, new_itvls)
     end
     return Intervals(new_itvls)
 end
+
+size(i::I) where {I <: Interval} = span(i)

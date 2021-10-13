@@ -1,11 +1,15 @@
 module ConstraintDomains
 
+# NOTE - Reexport.jl
+using Reexport
+
+@reexport using PatternFolds
+
 # Imports
 using Dictionaries
-using PatternFolds
 
 # Functions exports
-export AbstractDomain, ContinuousDomain, DiscreteDomain, RangeDomain, DiscreteSet, Intervals
+export AbstractDomain, ContinuousDomain, DiscreteDomain, RangeDomain, DiscreteSet
 export domain
 export domain_size
 export get_domain
