@@ -1,7 +1,7 @@
 name = "ConstraintDomains"
 uuid = "5800fd60-8556-4464-8d61-84ebf7a0bedb"
 authors = ["Jean-François Baffier"]
-version = "0.2.5"
+version = "0.2.6"
 
 [deps]
 Dictionaries = "85a47980-9c8c-11e8-2b9f-f7ca1fa99fb4"
@@ -11,7 +11,9 @@ Reexport = "189a3867-3050-52da-a836-e630ba90ab69"
 
 [compat]
 Dictionaries = "0.3"
+Intervals = "1"
 PatternFolds = "0.2"
+Reexport = "1"
 julia = "1.6"
 
 [extras]
