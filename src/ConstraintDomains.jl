@@ -1,20 +1,24 @@
 module ConstraintDomains
 
-# NOTE - Reexport.jl
-using Reexport
-
-@reexport using PatternFolds
-
-# Imports
+# SECTION - Imports
 using Dictionaries
+using PatternFolds
 
-# Functions exports
-export AbstractDomain, ContinuousDomain, DiscreteDomain, RangeDomain, DiscreteSet
+# Exports
+export AbstractDomain
+export ContinuousDomain
+export DiscreteDomain
+export DiscreteSet
+export RangeDomain
+
+export add!
+export delete!
 export domain
 export domain_size
+export explore
 export get_domain
-export add!, delete!
-export merge_domains, intersect_domains
+export intersect_domains
+export merge_domains
 
 # Includes
 include("utils.jl")
@@ -22,5 +26,6 @@ include("common.jl")
 include("continuous.jl")
 include("discrete.jl")
 include("general.jl")
+include("explore.jl")
 
 end
