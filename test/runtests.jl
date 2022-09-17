@@ -72,4 +72,11 @@ using Test
         end
 
     end
+
+    @testset "Exploration" begin
+        domains = [domain([1,2,3,4]) for i in 1:4]
+        X, X̅ = explore(domains, allunique)
+        @test length(X) == factorial(4)
+        @test length(X̅) == 4^4 - factorial(4)
+    end
 end
