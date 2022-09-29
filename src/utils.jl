@@ -20,6 +20,8 @@ function to_domains(X, ds::Int = δ_extrema(X) + 1)
     return fill(d, length(first(X)))
 end
 
+to_domains(X, ::Nothing) = to_domains(X)
+
 function oversample(X, f)
     X_true = Vector{eltype(X)}()
     X_false = Vector{eltype(X)}()
