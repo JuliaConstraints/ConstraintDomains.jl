@@ -1,3 +1,56 @@
+struct ExploreSettings
+    complete_search_limit::Int
+    max_samplings::Int
+    search::Symbol
+    solutions_limit::Int
+end
+
+function ExploreSettings(
+    domains;
+    complete_search_limit = 10^6,
+    max_samplings = sum(domain_size, domains),
+    search = :flexible,
+    solutions_limit = floor(Int, sqrt(max_samplings)),
+)
+    return ExploreSettings(complete_search_limit, max_samplings, search, solutions_limit)
+end
+
+function _explore(domains, concept, param, s, ::Val{:partial})
+    solutions = Set{Vector{Int}}()
+    non_sltns = Set{Vector{Int}}()
+
+    sl = s.solutions_limit
+
+    f = isnothing(param) ? ((x; param = p) -> concept(x)) : concept
+
+    for _ in 1:s.max_samplings
+        length(solutions) ≥ sl && length(non_sltns) ≥ sl && break
+        config = map(rand, domains)
+        c = f(config; param) ? solutions : non_sltns
+        length(c) < sl && push!(c, config)
+    end
+    return solutions, non_sltns
+end
+
+function _explore(domains, concept, param, ::ExploreSettings, ::Val{:complete})
+    solutions = Set{Vector{Int}}()
+    non_sltns = Set{Vector{Int}}()
+
+    f = isnothing(param) ? ((x; param = p) -> concept(x)) : concept
+
+    configurations = Base.Iterators.product(map(d -> get_domain(d), domains)...)
+    foreach(
+        c -> (cv = collect(c); push!(f(cv; param) ? solutions : non_sltns, cv)),
+        configurations,
+    )
+    return solutions, non_sltns
+end
+
+function _explore(domains, concept, param, s, ::Val{:flexible})
+    search = s.max_samplings < s.complete_search_limit ? :complete : :partial
+    return _explore(domains, concept, param, s, Val(search))
+end
+
 """
     explore(domains, concept, param = nothing; search_limit = 1000, solutions_limit = 100)
 
@@ -13,44 +66,9 @@ Beware that if the density of the solutions in the search space is low, `solutio
 """
 function explore(
     domains,
-    concept,
-    param=nothing;
-    search=:flexible,
-    complete_search_limit=10^6,
-    max_samplings=sum(domain_size, domains),
-    solutions_limit=floor(Int, sqrt(max_samplings)),
+    concept;
+    param=nothing,
+    settings = ExploreSettings(domains),
 )
-    if search == :flexible
-        search = sum(domain_size, domains) < complete_search_limit ? :complete : :partial
-    end
-    return explore(Val(search), domains, concept, param, solutions_limit, max_samplings)
-end
-
-function explore(::Val{:partial}, domains, concept, param, solutions_limit, max_samplings)
-    solutions = Set{Vector{Int}}()
-    non_sltns = Set{Vector{Int}}()
-
-    f = isnothing(param) ? ((x; param = p) -> concept(x)) : concept
-
-    for _ in 1:max_samplings
-        length(solutions) ≥ solutions_limit && length(non_sltns) ≥ solutions_limit && break
-        config = map(rand, domains)
-        c = f(config; param) ? solutions : non_sltns
-        length(c) < solutions_limit && push!(c, config)
-    end
-    return solutions, non_sltns
-end
-
-function explore(::Val{:complete}, domains, concept, param, ::Int, ::Int)
-    solutions = Set{Vector{Int}}()
-    non_sltns = Set{Vector{Int}}()
-
-    f = isnothing(param) ? ((x; param = p) -> concept(x)) : concept
-
-    configurations = Base.Iterators.product(map(d -> get_domain(d), domains)...)
-    foreach(
-        c -> (cv = collect(c); push!(f(cv; param) ? solutions : non_sltns, cv)),
-        configurations,
-    )
-    return solutions, non_sltns
+    return _explore(domains, concept, param, settings, Val(settings.search))
 end
