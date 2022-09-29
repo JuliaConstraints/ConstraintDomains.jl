@@ -92,3 +92,8 @@ function intersect_domains(d₁::D1,d₂::D2
 ) where {D1 <: DiscreteDomain, D2 <: DiscreteDomain}
     return intersect(get_domain(d₁), get_domain(d₂))
 end
+
+function to_domains(X, d::D) where {D <: DiscreteDomain}
+    n::Int = length(first(X)) / domain_size(d)
+    return fill(d, n)
+end
