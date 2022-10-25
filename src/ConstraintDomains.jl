@@ -1,6 +1,7 @@
 module ConstraintDomains
 
 # SECTION - Imports
+using ConstraintCommons
 using Dictionaries
 using PatternFolds
 
@@ -13,7 +14,6 @@ export ExploreSettings
 export RangeDomain
 
 export add!
-export δ_extrema
 export delete!
 export domain
 export domain_size
@@ -24,7 +24,6 @@ export merge_domains
 export to_domains
 
 # Includes
-include("utils.jl")
 include("common.jl")
 include("continuous.jl")
 include("discrete.jl")

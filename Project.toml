@@ -4,6 +4,7 @@ authors = ["Jean-François Baffier"]
 version = "0.3.2"
 
 [deps]
+ConstraintCommons = "e37357d9-0691-492f-a822-e5ea6a920954"
 Dictionaries = "85a47980-9c8c-11e8-2b9f-f7ca1fa99fb4"
 Intervals = "d8418881-c3e1-53bb-8760-2df7ec849ed5"
 PatternFolds = "c18a7f1d-76ad-4ce4-950d-5419b888513b"
