@@ -18,6 +18,7 @@ export delete!
 export domain
 export domain_size
 export explore
+export generate_parameters
 export get_domain
 export intersect_domains
 export merge_domains
@@ -29,5 +30,6 @@ include("continuous.jl")
 include("discrete.jl")
 include("general.jl")
 include("explore.jl")
+include("parameters.jl")
 
 end

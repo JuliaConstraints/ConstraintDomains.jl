@@ -27,31 +27,31 @@ domain() = EmptyDomain()
     Base.in(value, d <: AbstractDomain)
 Fallback method for `value ∈ d` that returns `false`.
 """
-Base.in(value, ::D) where D <: AbstractDomain = false
+Base.in(value, ::D) where {D<:AbstractDomain} = false
 
 """
     Base.rand(d <: AbstractDomain)
 Fallback method for `length(d)` that return `0`.
 """
-Base.length(::D) where D <: AbstractDomain = 0
+Base.length(::D) where {D<:AbstractDomain} = 0
 
 """
     Base.isempty(d <: AbstractDomain)
 Fallback method for `isempty(d)` that return `length(d) == 0` which default to `0`.
 """
-Base.isempty(d::D) where D <: AbstractDomain = length(d) == 0
+Base.isempty(d::D) where {D<:AbstractDomain} = length(d) == 0
 
 """
     domain_size(d <: AbstractDomain)
 Fallback method for `domain_size(d)` that return `length(d)`.
 """
-domain_size(d::D) where D <: AbstractDomain = length(d)
+domain_size(d::D) where {D<:AbstractDomain} = length(d)
 
 """
     get_domain(::AbstractDomain)
 Access the internal structure of any domain type.
 """
-get_domain(d::D) where {D <: AbstractDomain} = d.domain
+get_domain(d::D) where {D<:AbstractDomain} = d.domain
 
 """
     to_domains(args...)
@@ -59,9 +59,17 @@ TODO - doc
 """
 to_domains(domain_sizes::Vector{Int}) = map(ds -> domain(0:ds), domain_sizes)
 
-function to_domains(X, ds::Int = δ_extrema(X) + 1)
+function to_domains(X, ds::Int=δ_extrema(X) + 1)
     d = domain(0:ds-1)
     return fill(d, length(first(X)))
 end
 
 to_domains(X, ::Nothing) = to_domains(X)
+
+Base.rand(d::AbstractDomain) = rand(get_domain(d))
+
+Base.rand(d::Union{Vector{D},Set{D}}) where {D<:AbstractDomain} = map(rand, d)
+
+function Base.rand(d::V) where {D<:AbstractDomain,U<:Union{Vector{D},Set{D}},V<:AbstractVector{U}}
+    return map(rand, d)
+end
