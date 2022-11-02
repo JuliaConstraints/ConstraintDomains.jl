@@ -2,13 +2,13 @@
     DiscreteDomain{T <: Number} <: AbstractDomain
 An abstract supertype for discrete domains (set, range).
 """
-abstract type DiscreteDomain{T <: Number} <: AbstractDomain end
+abstract type DiscreteDomain{T} <: AbstractDomain end
 
 """
     SetDomain{T <: Number} <: DiscreteDomain{T}
 Domain that stores discrete values as a set of (unordered) points.
 """
-struct SetDomain{T <: Number} <: DiscreteDomain{T}
+struct SetDomain{T} <: DiscreteDomain{T}
     domain::Set{T}
 end
 SetDomain(values) = SetDomain(Set(values))
@@ -20,6 +20,8 @@ A discrete domain defined by a `range <: AbstractRange{Real}`. As ranges are imm
 struct RangeDomain{T <: Real, R <: AbstractRange{T}} <: DiscreteDomain{T}
     domain::R
 end
+
+ArbitraryDomain(elements) = ArbitraryDomain(Set(elements))
 
 """
     domain(values)
