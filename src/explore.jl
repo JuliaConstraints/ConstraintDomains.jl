@@ -15,40 +15,36 @@ function ExploreSettings(
     return ExploreSettings(complete_search_limit, max_samplings, search, solutions_limit)
 end
 
-function _explore(domains, concept, param, s, ::Val{:partial})
+function _explore(domains, f, s, ::Val{:partial})
     solutions = Set{Vector{Int}}()
     non_sltns = Set{Vector{Int}}()
 
     sl = s.solutions_limit
 
-    f = isnothing(param) ? ((x; param = p) -> concept(x)) : concept
-
     for _ in 1:s.max_samplings
         length(solutions) ≥ sl && length(non_sltns) ≥ sl && break
         config = map(rand, domains)
-        c = f(config; param) ? solutions : non_sltns
+        c = f(config) ? solutions : non_sltns
         length(c) < sl && push!(c, config)
     end
     return solutions, non_sltns
 end
 
-function _explore(domains, concept, param, ::ExploreSettings, ::Val{:complete})
+function _explore(domains, f, ::ExploreSettings, ::Val{:complete})
     solutions = Set{Vector{Int}}()
     non_sltns = Set{Vector{Int}}()
 
-    f = isnothing(param) ? ((x; param = p) -> concept(x)) : concept
-
     configurations = Base.Iterators.product(map(d -> get_domain(d), domains)...)
     foreach(
-        c -> (cv = collect(c); push!(f(cv; param) ? solutions : non_sltns, cv)),
+        c -> (cv = collect(c); push!(f(cv) ? solutions : non_sltns, cv)),
         configurations,
     )
     return solutions, non_sltns
 end
 
-function _explore(domains, concept, param, s, ::Val{:flexible})
+function _explore(domains, f, s, ::Val{:flexible})
     search = s.max_samplings < s.complete_search_limit ? :complete : :partial
-    return _explore(domains, concept, param, s, Val(search))
+    return _explore(domains, f, s, Val(search))
 end
 
 """
@@ -67,8 +63,9 @@ Beware that if the density of the solutions in the search space is low, `solutio
 function explore(
     domains,
     concept;
-    param=nothing,
     settings = ExploreSettings(domains),
+    parameters...
 )
-    return _explore(domains, concept, param, settings, Val(settings.search))
+    f = x -> concept(x; parameters...)
+    return _explore(domains, f, settings, Val(settings.search))
 end

@@ -8,8 +8,8 @@ abstract type ContinuousDomain{T<:Real} <: AbstractDomain end
     Intervals{T <: Real} <: ContinuousDomain{T}
 An encapsuler to store a vector of `PatternFolds.Interval`. Dynamic changes to `Intervals` are not handled yet.
 """
-struct Intervals{T<:Real,L,R} <: ContinuousDomain{T}
-    domain::Vector{Interval{T,L,R}}
+struct Intervals{T<:Real,I<:Interval{T}} <: ContinuousDomain{T}
+    domain::Vector{I}
 end
 
 """
@@ -76,8 +76,14 @@ function merge_domains(d1::D, d2::D) where {D<:ContinuousDomain}
 end
 
 function intersect_domains(i₁::I1, i₂::I2) where {I1<:Interval,I2<:Interval}
-    a = a_ismore(i₁, i₂) ? i₁.a : i₂.a
-    b = b_isless(i₁, i₂) ? i₁.b : i₂.b
+    if i₁.first > i₂.first
+        return intersect_domains(i₂, i₁)
+    end
+    if i₁.last < i₂.first
+        return domain()
+    end
+    a = i₂.first
+    b = min(i₁.last, i₂.last)
     return Interval(a, b)
 end
 
