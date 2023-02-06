@@ -73,6 +73,12 @@ Delete `value` from the list of points in `d`.
 """
 Base.delete!(d::SetDomain, value) = pop!(get_domain(d), value)
 
+
+"""
+    merge_domains(d₁::AbstractDomain, d₂::AbstractDomain)
+
+Merge two domains of same nature (discrete/contiuous).
+"""
 function merge_domains(rd₁::RangeDomain, rd₂::RangeDomain)
     d₁ = get_domain(rd₁)
     d₂ = get_domain(rd₂)
@@ -98,4 +104,53 @@ end
 function to_domains(X, d::D) where {D <: DiscreteDomain}
     n::Int = length(first(X)) / domain_size(d)
     return fill(d, n)
+end
+
+## SECTION - Test Items
+@testitem "DiscreteDomain" tags = [:domain, :discrete, :set] begin
+    d1 = domain([4,3,2,1])
+    d2 = domain(1)
+    foreach(i -> add!(d2, i), 2:4)
+    domains = [
+        d1,
+        d2,
+    ]
+
+    for d in domains
+    # constructors and ∈
+        for x in [1,2,3,4]
+            @test x ∈ d
+        end
+    # length
+        @test length(d) == 4
+    # draw and ∈
+        @test rand(d) ∈ d
+    # add!
+        add!(d, 5)
+        @test 5 ∈ d
+    # delete!
+        delete!(d, 5)
+        @test 5 ∉ d
+        @test domain_size(d) == 3
+    end
+end
+
+@testitem "RangeDomain" tags = [:domain, :discrete, :range] begin
+    d1 = domain(1:5)
+    d2 = domain(1:.5:5)
+    domains = [
+        d1,
+        d2,
+    ]
+
+    for d in domains
+        for x in [1, 2, 3, 4, 5]
+            @test x ∈ d
+        end
+        for x in [42]
+            @test x ∉ d
+        end
+        @test rand(d) ∈ d
+    end
+
 end

@@ -5,6 +5,17 @@ struct ExploreSettings
     solutions_limit::Int
 end
 
+"""
+    ExploreSettings(
+        domains;
+        complete_search_limit = 10^6,
+        max_samplings = sum(domain_size, domains),
+        search = :flexible,
+        solutions_limit = floor(Int, sqrt(max_samplings)),
+    )
+
+Settings for the exploration of a search space composed by a collection of domains.
+"""
 function ExploreSettings(
     domains;
     complete_search_limit = 10^6,
@@ -15,6 +26,11 @@ function ExploreSettings(
     return ExploreSettings(complete_search_limit, max_samplings, search, solutions_limit)
 end
 
+"""
+    _explore(args...)
+
+Internals of the `explore` function. Behavior is automatically adjusted on the kind of exploration: `:flexible`, `:complete`, `:partial`.
+"""
 function _explore(domains, f, s, ::Val{:partial})
     solutions = Set{Vector{Int}}()
     non_sltns = Set{Vector{Int}}()
@@ -68,4 +84,12 @@ function explore(
 )
     f = x -> concept(x; parameters...)
     return _explore(domains, f, settings, Val(settings.search))
+end
+
+## SECTION - Test Items
+@testitem "Exploration" tags = [:exploration] begin
+    domains = [domain([1,2,3,4]) for i in 1:4]
+    X, X̅ = explore(domains, allunique)
+    @test length(X) == factorial(4)
+    @test length(X̅) == 4^4 - factorial(4)
 end

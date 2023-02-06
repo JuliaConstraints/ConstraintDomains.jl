@@ -4,6 +4,8 @@ module ConstraintDomains
 using ConstraintCommons
 using Dictionaries
 using PatternFolds
+using TestItemRunner
+using TestItems
 
 # Exports
 export AbstractDomain

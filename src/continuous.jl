@@ -72,9 +72,15 @@ function domain_size(itv::Intervals)
     return maximum(last, get_domain(itv)) - minimum(first, get_domain(itv))
 end
 
+# TODO - implement
 function merge_domains(d1::D, d2::D) where {D<:ContinuousDomain}
 end
 
+"""
+    intersect_domains(d₁, d₂)
+
+Compute the intersections of two domains.
+"""
 function intersect_domains(i₁::I1, i₂::I2) where {I1<:Interval,I2<:Interval}
     if i₁.first > i₂.first
         return intersect_domains(i₂, i₁)
@@ -102,4 +108,36 @@ function intersect_domains(d₁::D, d₂::D) where {T<:Real,D<:ContinuousDomain{
     return Intervals(new_itvls)
 end
 
+
+"""
+    Base.size(i::I) where {I <: Interval}
+
+Defines the size of an interval as its `span`.
+"""
 size(i::I) where {I <: Interval} = span(i)
+
+## SECTION - Test Items
+@testitem "ContinuousDomain" tags = [:domains, :continuous] default_imports=false begin
+    using ConstraintDomains, Intervals, Test
+    # import Base:size
+
+    d1 = domain(1.0..3.15)
+    d2 = domain(Interval{Open, Open}(-42.42, 5.0))
+
+    domains = [
+        d1,
+        d2,
+    ]
+
+    for d in domains
+        for x in [1, 2.3, π]
+            @test x ∈ d
+        end
+        for x in [5.1, π^π, Inf]
+            @test x ∉ d
+        end
+        @test rand(d) ∈ d
+        @test rand(d, 1) ∈ d
+        @test domain_size(d) > 0.0
+    end
+end
