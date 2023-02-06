@@ -1,5 +1,16 @@
+"""
+    Base.eltype(::AbstractDomain)
+
+Extend `eltype` for domains.
+"""
 Base.eltype(::D) where {T, D <: Union{DiscreteDomain{T}, ContinuousDomain{T}}} = T
 
+
+"""
+    Base.convert(::Type{Union{Intervals, RangeDomain}}, d::Union{Intervals, RangeDomain})
+
+Extends `Base.convert` for domains.
+"""
 function Base.convert(::Type{Intervals}, d::RangeDomain{T}) where {T <: Real}
     a, b = extrema(get_domain(d))
     return domain(Float64(a)..Float64(b))

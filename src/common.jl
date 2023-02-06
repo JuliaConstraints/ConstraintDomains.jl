@@ -55,7 +55,8 @@ get_domain(d::D) where {D<:AbstractDomain} = d.domain
 
 """
     to_domains(args...)
-TODO - doc
+
+Convert various arguments into valid domains format.
 """
 to_domains(domain_sizes::Vector{Int}) = map(ds -> domain(0:ds), domain_sizes)
 
@@ -66,10 +67,23 @@ end
 
 to_domains(X, ::Nothing) = to_domains(X)
 
+"""
+    Base.rand(d::Union{Vector{D},Set{D}, D}) where {D<:AbstractDomain}
+
+Extends `Base.rand` to (a collection of) domains.
+"""
 Base.rand(d::AbstractDomain) = rand(get_domain(d))
 
 Base.rand(d::Union{Vector{D},Set{D}}) where {D<:AbstractDomain} = map(rand, d)
 
 function Base.rand(d::V) where {D<:AbstractDomain,U<:Union{Vector{D},Set{D}},V<:AbstractVector{U}}
     return map(rand, d)
+end
+
+## SECTION - Test Items
+@testitem "EmptyDomain" tags = [:domains, :empty] begin
+    ed = domain()
+    @test domain_size(ed) == 0 == length(ed)
+    @test isempty(ed)
+    @test π ∉ ed
 end
