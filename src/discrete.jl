@@ -32,6 +32,7 @@ d1 = domain(1:5)
 d2 = domain([53.69, 89.2, 0.12])
 d3 = domain([2//3, 89//123])
 d4 = domain(4.3)
+d5 = domain(1,42,86.9)
 ```
 """
 domain(values) = SetDomain(values)
@@ -105,6 +106,10 @@ function to_domains(X, d::D) where {D <: DiscreteDomain}
     n::Int = length(first(X)) / domain_size(d)
     return fill(d, n)
 end
+
+Base.string(d::RangeDomain) = replace("$(d.domain[1])..$(d.domain[end])", " " => "")
+
+Base.string(d::SetDomain) = replace(string(sort!(collect(d.domain))), " " => "")
 
 ## SECTION - Test Items
 @testitem "DiscreteDomain" tags = [:domain, :discrete, :set] begin
