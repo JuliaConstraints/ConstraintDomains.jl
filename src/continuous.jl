@@ -116,7 +116,13 @@ Defines the size of an interval as its `span`.
 """
 size(i::I) where {I <: Interval} = span(i)
 
-## SECTION - Test Items
+function Base.string(d::Intervals)
+    return replace(
+        "[$(prod(i -> "$(string(i)[2:end-1]),", d.domain)[1:end-1])]",
+        " " => "",
+    )
+end
+
 @testitem "ContinuousDomain" tags = [:domains, :continuous] default_imports=false begin
     using ConstraintDomains, Intervals, Test
     # import Base:size

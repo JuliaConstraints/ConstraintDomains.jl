@@ -23,6 +23,8 @@ Construct an [`EmptyDomain`](@ref).
 """
 domain() = EmptyDomain()
 
+domain(values...) = domain(collect(values))
+
 """
     Base.in(value, d <: AbstractDomain)
 Fallback method for `value ∈ d` that returns `false`.
@@ -79,6 +81,20 @@ Base.rand(d::Union{Vector{D},Set{D}}) where {D<:AbstractDomain} = map(rand, d)
 function Base.rand(d::V) where {D<:AbstractDomain,U<:Union{Vector{D},Set{D}},V<:AbstractVector{U}}
     return map(rand, d)
 end
+
+"""
+    Base.string(D::Vector{<:AbstractDomain})
+    Base.string(d<:AbstractDomain)
+
+Extends the `string` method to (a vector of) domains.
+"""
+function Base.string(D::Vector{<:AbstractDomain})
+    return replace(
+        "[$(prod(d -> string(d) * ',', D)[1:end-1])]",
+        " " => "",
+    )
+end
+Base.string(d::AbstractDomain) = replace(string(d.domain), " " => "")
 
 ## SECTION - Test Items
 @testitem "EmptyDomain" tags = [:domains, :empty] begin
