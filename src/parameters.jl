@@ -60,7 +60,9 @@ Base.rand(d::OpParameterDomain) = rand(d.ops)
 struct PairVarsParameterDomain{T} <: AbstractDomain
     pair_vars::T
 end
-generate_parameters(d, ::Val{:pair_vars}) = PairVarsParameterDomain(d)
+function generate_parameters(d, ::Val{:pair_vars})
+    return PairVarsParameterDomain(hcat(map(_ -> d, 1:length(d))...))
+end
 Base.rand(d::PairVarsParameterDomain) = map(rand, d.pair_vars)
 
 struct ValParameterDomain{T} <: AbstractDomain
