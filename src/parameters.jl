@@ -37,7 +37,7 @@ Construct a `FakeAutomaton`.
 function fake_automaton(d)
     l = length(d)
     words = Set{Vector{eltype(first(d))}}()
-    for _ in 1:max(l, rand(1:l^2))
+    for _ in 1:l
         push!(words, map(rand, d))
     end
     return FakeAutomaton(words)
