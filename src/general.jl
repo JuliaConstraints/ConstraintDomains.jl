@@ -22,3 +22,7 @@ function Base.convert(::Type{RangeDomain}, d::Intervals{T}) where {T <: Real}
     b = Int(i.last)
     return domain(a:b)
 end
+
+function Base.convert(::Type{RangeDomain}, d::SetDomain{T}) where {T <: Integer}
+    return domain(collect(get_domain(d)))
+end

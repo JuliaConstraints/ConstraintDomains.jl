@@ -100,7 +100,7 @@ function intersect_domains!(is::IS, i::I, new_itvls) where {IS<:Intervals,I<:Int
     end
 end
 
-function intersect_domains(d₁::D, d₂::D) where {T<:Real,D<:ContinuousDomain{T}}
+function intersect_domains(d₁::D1, d₂::D2) where {T<:Real,D1<:ContinuousDomain{T}, D2<:ContinuousDomain{T}}
     new_itvls = Vector{Interval{T}}()
     for i in get_domain(d₂)
         intersect_domains!(d₁, i, new_itvls)
@@ -114,7 +114,7 @@ end
 
 Defines the size of an interval as its `span`.
 """
-size(i::I) where {I <: Interval} = span(i)
+size(i::I) where {I <: Interval} = PatternFolds.span(i)
 
 function Base.string(d::Intervals)
     return replace(
