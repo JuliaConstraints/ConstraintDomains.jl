@@ -21,6 +21,11 @@ struct RangeDomain{T<:Real,R<:AbstractRange{T}} <: DiscreteDomain{T}
     domain::R
 end
 
+"""
+    ArbitraryDomain{T} <: DiscreteDomain{T}
+
+A domain type that stores arbitrary values, possibly non numeric, of type `T`.
+"""
 ArbitraryDomain(elements) = ArbitraryDomain(Set(elements))
 
 """

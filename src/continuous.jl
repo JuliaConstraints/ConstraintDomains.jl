@@ -93,6 +93,24 @@ function intersect_domains(i₁::I1, i₂::I2) where {I1<:Interval,I2<:Interval}
     return Interval(a, b)
 end
 
+"""
+    intersect_domains!(is, i, new_itvls)
+
+Compute the intersections of a domain with an interval and store the results in `new_itvls`.
+
+## Arguments
+- `is::IS`: a collection of intervals.
+- `i::I`: an interval.
+- `new_itvls::Vector{I}`: a vector to store the results.
+
+## Examples
+```julia
+is = domain([Interval(0, 1), Interval(3.5, 42)])
+i = Interval(0.5, 1.5)
+new_itvls = Vector{Interval}()
+intersect_domains!(is, i, new_itvls)
+```
+"""
 function intersect_domains!(is::IS, i::I, new_itvls) where {IS<:Intervals,I<:Interval}
     for interval in get_domain(is)
         intersection = intersect_domains(interval, i)
