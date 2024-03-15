@@ -1,12 +1,28 @@
+"""
+    BoolParameterDomain <: AbstractDomain
+
+A domain to store boolean values. It is used to generate random parameters.
+"""
 struct BoolParameterDomain <: AbstractDomain end
 generate_parameters(_, ::Val{:bool}) = BoolParameterDomain()
 Base.rand(::BoolParameterDomain) = rand(Bool)
+
+"""
+    DimParameterDomain <: AbstractDomain
+
+A domain to store dimensions. It is used to generate random parameters.
+"""
 struct DimParameterDomain <: AbstractDomain
     max_dimendion::Int
 end
 generate_parameters(d, ::Val{:dim}) = DimParameterDomain(floor(Int, √(length(d))))
 Base.rand(d::DimParameterDomain) = rand(1:d.max_dimendion)
 
+"""
+    IdParameterDomain <: AbstractDomain
+
+A domain to store ids. It is used to generate random parameters.
+"""
 struct IdParameterDomain <: AbstractDomain
     max_id::Int
 end
@@ -43,6 +59,11 @@ function fake_automaton(d)
     return FakeAutomaton(words)
 end
 
+"""
+    LanguageParameterDomain <: AbstractDomain
+
+A domain to store languages. It is used to generate random parameters.
+"""
 struct LanguageParameterDomain <: AbstractDomain
     automata::Vector{FakeAutomaton}
 end
@@ -51,12 +72,22 @@ function generate_parameters(d, ::Val{:language})
 end
 Base.rand(d::LanguageParameterDomain) = rand(d.automata)
 
+"""
+    OpParameterDomain{T} <: AbstractDomain
+
+A domain to store operators. It is used to generate random parameters.
+"""
 struct OpParameterDomain{T} <: AbstractDomain
     ops::T
 end
 generate_parameters(_, ::Val{:op}) = OpParameterDomain([<, ≤, ==, ≥, >])
 Base.rand(d::OpParameterDomain) = rand(d.ops)
 
+"""
+    PairVarsParameterDomain{T} <: AbstractDomain
+
+A domain to store values paired with variables. It is used to generate random parameters.
+"""
 struct PairVarsParameterDomain{T} <: AbstractDomain
     pair_vars::T
 end
@@ -65,12 +96,22 @@ function generate_parameters(d, ::Val{:pair_vars})
 end
 Base.rand(d::PairVarsParameterDomain) = map(rand, d.pair_vars)
 
+"""
+    ValParameterDomain{T} <: AbstractDomain
+
+A domain to store one value. It is used to generate random parameters.
+"""
 struct ValParameterDomain{T} <: AbstractDomain
     val::T
 end
 generate_parameters(d, ::Val{:val}) = ValParameterDomain(d[rand(1:length(d))])
 Base.rand(d::ValParameterDomain) = d.val |> rand
 
+"""
+    ValsParameterDomain{T} <: AbstractDomain
+
+A domain to store values. It is used to generate random parameters.
+"""
 struct ValsParameterDomain{T} <: AbstractDomain
     vals::T
 end
