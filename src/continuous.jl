@@ -16,12 +16,6 @@ end
     domain(a::Tuple{T, Bool}, b::Tuple{T, Bool}) where {T <: Real}
     domain(intervals::Vector{Tuple{Tuple{T, Bool},Tuple{T, Bool}}}) where {T <: Real}
 Construct a domain of continuous interval(s).
-```julia
-d1 = domain((0., true), (1., false)) # d1 = [0, 1)
-d2 = domain([ # d2 = [0, 1) ∪ (3.5, 42]
-    (0., true), (1., false),
-    (3.5, false), (42., true),
-])
 """
 function domain(intervals::Vector{Interval{T,L,R}}) where {T<:Real,L,R}
     return Intervals(map(i -> Interval(i), intervals))
@@ -102,14 +96,6 @@ Compute the intersections of a domain with an interval and store the results in 
 - `is::IS`: a collection of intervals.
 - `i::I`: an interval.
 - `new_itvls::Vector{I}`: a vector to store the results.
-
-## Examples
-```julia
-is = domain([Interval(0, 1), Interval(3.5, 42)])
-i = Interval(0.5, 1.5)
-new_itvls = Vector{Interval}()
-intersect_domains!(is, i, new_itvls)
-```
 """
 function intersect_domains!(is::IS, i::I, new_itvls) where {IS<:Intervals,I<:Interval}
     for interval in get_domain(is)

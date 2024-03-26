@@ -19,7 +19,7 @@ struct EmptyDomain <: AbstractDomain end
 
 """
     domain()
-Construct an [`EmptyDomain`](@ref).
+Construct an `EmptyDomain`.
 """
 domain() = EmptyDomain()
 
