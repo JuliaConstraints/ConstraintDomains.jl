@@ -27,7 +27,7 @@ domain(intervals::Vector{I}) where {I<:Interval} = Intervals(intervals)
     Base.length(itv::Intervals)
 Return the sum of the length of each interval in `itv`.
 """
-Base.length(itv::Intervals) = sum(size, get_domain(itv); init=0)
+Base.length(itv::Intervals) = sum(size, get_domain(itv); init = 0)
 
 """
     Base.rand(itv::Intervals)
@@ -67,8 +67,7 @@ function domain_size(itv::Intervals)
 end
 
 # TODO - implement
-function merge_domains(d1::D, d2::D) where {D<:ContinuousDomain}
-end
+function merge_domains(d1::D, d2::D) where {D<:ContinuousDomain} end
 
 """
     intersect_domains(d₁, d₂)
@@ -104,7 +103,10 @@ function intersect_domains!(is::IS, i::I, new_itvls) where {IS<:Intervals,I<:Int
     end
 end
 
-function intersect_domains(d₁::D1, d₂::D2) where {T<:Real,D1<:ContinuousDomain{T}, D2<:ContinuousDomain{T}}
+function intersect_domains(
+    d₁::D1,
+    d₂::D2,
+) where {T<:Real,D1<:ContinuousDomain{T},D2<:ContinuousDomain{T}}
     new_itvls = Vector{Interval{T}}()
     for i in get_domain(d₂)
         intersect_domains!(d₁, i, new_itvls)
@@ -118,26 +120,20 @@ end
 
 Defines the size of an interval as its `span`.
 """
-size(i::I) where {I <: Interval} = PatternFolds.span(i)
+size(i::I) where {I<:Interval} = PatternFolds.span(i)
 
 function Base.string(d::Intervals)
-    return replace(
-        "[$(prod(i -> "$(string(i)[2:end-1]),", d.domain)[1:end-1])]",
-        " " => "",
-    )
+    return replace("[$(prod(i -> "$(string(i)[2:end-1]),", d.domain)[1:end-1])]", " " => "")
 end
 
-@testitem "ContinuousDomain" tags = [:domains, :continuous] default_imports=false begin
+@testitem "ContinuousDomain" tags = [:domains, :continuous] default_imports = false begin
     using ConstraintDomains, Intervals, Test
     # import Base:size
 
-    d1 = domain(1.0..3.15)
-    d2 = domain(Interval{Open, Open}(-42.42, 5.0))
+    d1 = domain(1.0 .. 3.15)
+    d2 = domain(Interval{Open,Open}(-42.42, 5.0))
 
-    domains = [
-        d1,
-        d2,
-    ]
+    domains = [d1, d2]
 
     for d in domains
         for x in [1, 2.3, π]

@@ -12,7 +12,7 @@ using TestItems
 export AbstractDomain
 export ContinuousDomain
 export DiscreteDomain
-export DiscreteSet
+# export DiscreteSet # not defined
 export ExploreSettings
 export RangeDomain
 

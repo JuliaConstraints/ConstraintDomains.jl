@@ -1,3 +1,7 @@
+using Test
 using TestItemRunner
 
-@run_package_tests
+@testset "Package tests: ConstraintDomains" begin
+    include("Aqua.jl")
+    include("TestItemRunner.jl")
+end
