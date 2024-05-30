@@ -4,7 +4,7 @@ An abstract super type for any domain type. A domain type `D <: AbstractDomain` 
 - `Base.∈(val, ::D)`
 - `Base.rand(::D)`
 - `Base.length(::D)` that is the number of elements in a discrete domain, and the distance between bounds or similar for a continuous domain
-Addtionally, if the domain is used in a dynamic context, it can extend
+Additionally, if the domain is used in a dynamic context, it can extend
 - `add!(::D, args)`
 - `delete!(::D, args)`
 where `args` depends on `D`'s structure
@@ -62,7 +62,7 @@ Convert various arguments into valid domains format.
 """
 to_domains(domain_sizes::Vector{Int}) = map(ds -> domain(0:ds), domain_sizes)
 
-function to_domains(X, ds::Int = δ_extrema(X) + 1)
+function to_domains(X, ds::Int=δ_extrema(X) + 1)
     d = domain(0:ds-1)
     return fill(d, length(first(X)))
 end
