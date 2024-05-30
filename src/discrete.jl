@@ -102,8 +102,7 @@ function merge_domains(d₁::D1, d₂::D2) where {D1<:DiscreteDomain,D2<:Discret
     return union(get_domain(d₁), get_domain(d₂))
 end
 
-function intersect_domains(d₁::D1, d₂::D2
-) where {D1<:DiscreteDomain,D2<:DiscreteDomain}
+function intersect_domains(d₁::D1, d₂::D2) where {D1<:DiscreteDomain,D2<:DiscreteDomain}
     return intersect(get_domain(d₁), get_domain(d₂))
 end
 
@@ -121,10 +120,7 @@ Base.string(d::SetDomain) = replace(string(sort!(collect(d.domain))), " " => "")
     d1 = domain([4, 3, 2, 1])
     d2 = domain(1)
     foreach(i -> add!(d2, i), 2:4)
-    domains = [
-        d1,
-        d2,
-    ]
+    domains = [d1, d2]
 
     for d in domains
         # constructors and ∈
@@ -148,10 +144,7 @@ end
 @testitem "RangeDomain" tags = [:domain, :discrete, :range] begin
     d1 = domain(1:5)
     d2 = domain(1:0.5:5)
-    domains = [
-        d1,
-        d2,
-    ]
+    domains = [d1, d2]
 
     for d in domains
         for x in [1, 2, 3, 4, 5]

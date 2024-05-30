@@ -37,7 +37,7 @@ function _explore(domains, f, s, ::Val{:partial})
 
     sl = s.solutions_limit
 
-    for _ in 1:s.max_samplings
+    for _ = 1:s.max_samplings
         length(solutions) ≥ sl && length(non_sltns) ≥ sl && break
         config = map(rand, domains)
         c = f(config) ? solutions : non_sltns
@@ -76,19 +76,14 @@ Beware that if the density of the solutions in the search space is low, `solutio
 - `param`: an optional parameter of the constraint
 - `sol_number`: the required number of solutions (half of the number of configurations), default to `100`
 """
-function explore(
-    domains,
-    concept;
-    settings = ExploreSettings(domains),
-    parameters...
-)
+function explore(domains, concept; settings = ExploreSettings(domains), parameters...)
     f = x -> concept(x; parameters...)
     return _explore(domains, f, settings, Val(settings.search))
 end
 
 ## SECTION - Test Items
 @testitem "Exploration" tags = [:exploration] begin
-    domains = [domain([1,2,3,4]) for i in 1:4]
+    domains = [domain([1, 2, 3, 4]) for i = 1:4]
     X, X̅ = explore(domains, allunique)
     @test length(X) == factorial(4)
     @test length(X̅) == 4^4 - factorial(4)

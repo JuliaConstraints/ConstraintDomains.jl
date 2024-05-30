@@ -53,7 +53,7 @@ Construct a `FakeAutomaton`.
 function fake_automaton(d)
     l = length(d)
     words = Set{Vector{eltype(first(d))}}()
-    for _ in 1:l
+    for _ = 1:l
         push!(words, map(rand, d))
     end
     return FakeAutomaton(words)
@@ -117,7 +117,7 @@ struct ValsParameterDomain{T} <: AbstractDomain
 end
 function generate_parameters(d, ::Val{:vals})
     l = length(d)
-    inds(k) = sample(1:l, k; replace=false)
+    inds(k) = sample(1:l, k; replace = false)
     k = rand(1:l)
     return ValsParameterDomain(hcat(map(_ -> d[inds(k)], 1:l)...))
 end
