@@ -1,7 +1,7 @@
 name = "ConstraintDomains"
 uuid = "5800fd60-8556-4464-8d61-84ebf7a0bedb"
 authors = ["Jean-François Baffier"]
-version = "0.3.9"
+version = "0.3.10"
 
 [deps]
 ConstraintCommons = "e37357d9-0691-492f-a822-e5ea6a920954"
@@ -13,7 +13,7 @@ TestItemRunner = "f8b46487-2199-4994-9208-9a1283c18c0a"
 TestItems = "1c621080-faea-4a02-84b6-bbd5e436b8fe"
 
 [compat]
-ConstraintCommons = "0.1"
+ConstraintCommons = "0.2"
 Dictionaries = "0.4"
 Intervals = "1"
 PatternFolds = "0.2"
@@ -23,7 +23,8 @@ TestItems = "0.1"
 julia = "1.8"
 
 [extras]
+Aqua = "4c88cf16-eb10-579e-8560-4a9242c79595"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
-test = ["Test"]
+test = ["Aqua", "Test"]

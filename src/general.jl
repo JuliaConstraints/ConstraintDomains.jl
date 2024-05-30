@@ -3,7 +3,7 @@
 
 Extend `eltype` for domains.
 """
-Base.eltype(::D) where {T, D <: Union{DiscreteDomain{T}, ContinuousDomain{T}}} = T
+Base.eltype(::D) where {T,D<:Union{DiscreteDomain{T},ContinuousDomain{T}}} = T
 
 
 """
@@ -11,18 +11,18 @@ Base.eltype(::D) where {T, D <: Union{DiscreteDomain{T}, ContinuousDomain{T}}} =
 
 Extends `Base.convert` for domains.
 """
-function Base.convert(::Type{Intervals}, d::RangeDomain{T}) where {T <: Real}
+function Base.convert(::Type{Intervals}, d::RangeDomain{T}) where {T<:Real}
     a, b = extrema(get_domain(d))
-    return domain(Float64(a)..Float64(b))
+    return domain(Float64(a) .. Float64(b))
 end
 
-function Base.convert(::Type{RangeDomain}, d::Intervals{T}) where {T <: Real}
+function Base.convert(::Type{RangeDomain}, d::Intervals{T}) where {T<:Real}
     i = get_domain(d)[1]
     a = Int(i.first)
     b = Int(i.last)
     return domain(a:b)
 end
 
-function Base.convert(::Type{RangeDomain}, d::SetDomain{T}) where {T <: Integer}
+function Base.convert(::Type{RangeDomain}, d::SetDomain{T}) where {T<:Integer}
     return domain(collect(get_domain(d)))
 end
