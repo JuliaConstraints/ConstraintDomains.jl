@@ -123,14 +123,14 @@ function generate_parameters(d, ::Val{:vals})
 end
 Base.rand(d::ValsParameterDomain) = map(rand, d.vals)
 
-generate_parameters(d, param) = generate_parameters(d, Val(param))
+generate_parameters(d, param::Symbol) = generate_parameters(d, Val(param))
 
 """
     generate_parameters(d<:AbstractDomain, param)
 
 Generates random parameters based on the domain `d` and the kind of parameters `param`.
 """
-generate_parameters(d::AbstractDomain, param) = generate_parameters([d], param)
+generate_parameters(d::AbstractDomain, param::Symbol) = generate_parameters([d], param)
 
 """
     Base.rand(fa::FakeAutomaton)
