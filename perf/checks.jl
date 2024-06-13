@@ -9,7 +9,9 @@ d_commons = Dict(
     :targets => ["ConstraintDomains"],
     :path => @__DIR__,
     :pkgs => ("ConstraintDomains", :custom, [v"0.2.5", v"0.3.0", v"0.3.10"], true),
-    :seconds => 100, :samples => 10, :evals => 10,
+    :seconds => 100,
+    :samples => 10,
+    :evals => 10,
 )
 
 ## SECTION - Utilities
