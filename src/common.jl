@@ -54,6 +54,7 @@ domain_size(d::D) where {D<:AbstractDomain} = length(d)
 Access the internal structure of any domain type.
 """
 get_domain(d::D) where {D<:AbstractDomain} = d.domain
+get_domain(::EmptyDomain) = []
 
 """
     to_domains(args...)
@@ -75,6 +76,8 @@ to_domains(X, ::Nothing) = to_domains(X)
 Extends `Base.rand` to (a collection of) domains.
 """
 Base.rand(d::AbstractDomain) = rand(get_domain(d))
+
+Base.rand(::EmptyDomain) = nothing
 
 Base.rand(d::Union{Vector{D},Set{D}}) where {D<:AbstractDomain} = map(rand, d)
 
