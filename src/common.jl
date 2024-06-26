@@ -54,6 +54,7 @@ domain_size(d::D) where {D<:AbstractDomain} = length(d)
 Access the internal structure of any domain type.
 """
 get_domain(d::D) where {D<:AbstractDomain} = d.domain
+get_domain(::EmptyDomain) = []
 
 """
     to_domains(args...)
@@ -62,7 +63,7 @@ Convert various arguments into valid domains format.
 """
 to_domains(domain_sizes::Vector{Int}) = map(ds -> domain(0:ds), domain_sizes)
 
-function to_domains(X, ds::Int = δ_extrema(X) + 1)
+function to_domains(X, ds::Int=δ_extrema(X) + 1)
     d = domain(0:ds-1)
     return fill(d, length(first(X)))
 end
@@ -75,6 +76,8 @@ to_domains(X, ::Nothing) = to_domains(X)
 Extends `Base.rand` to (a collection of) domains.
 """
 Base.rand(d::AbstractDomain) = rand(get_domain(d))
+
+Base.rand(::EmptyDomain) = nothing
 
 Base.rand(d::Union{Vector{D},Set{D}}) where {D<:AbstractDomain} = map(rand, d)
 
