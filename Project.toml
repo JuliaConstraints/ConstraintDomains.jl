@@ -18,7 +18,7 @@ Dictionaries = "0.4"
 Intervals = "1"
 PatternFolds = "0.2"
 StatsBase = "0.34"
-TestItemRunner = "0.2"
+TestItemRunner = "0.2, 1"
 TestItems = "0.1"
 julia = "1.8"
 
