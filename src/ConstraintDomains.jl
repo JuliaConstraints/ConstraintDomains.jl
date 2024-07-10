@@ -5,7 +5,6 @@ using ConstraintCommons
 using Dictionaries
 using PatternFolds
 using StatsBase
-using TestItemRunner
 using TestItems
 
 # Exports
