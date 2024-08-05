@@ -1,7 +1,7 @@
 name = "ConstraintDomains"
 uuid = "5800fd60-8556-4464-8d61-84ebf7a0bedb"
 authors = ["Jean-François Baffier"]
-version = "0.3.12"
+version = "0.3.13"
 
 [deps]
 ConstraintCommons = "e37357d9-0691-492f-a822-e5ea6a920954"
@@ -15,7 +15,6 @@ ConstraintCommons = "0.2"
 Intervals = "1"
 PatternFolds = "0.2"
 StatsBase = "0.34"
-TestItemRunner = "0.2, 1"
 TestItems = "0.1, 1"
 julia = "1.8"
 
