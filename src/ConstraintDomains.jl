@@ -1,19 +1,19 @@
 module ConstraintDomains
 
 # SECTION - Imports
-using ConstraintCommons
-using Dictionaries
-using PatternFolds
-using StatsBase
-using TestItems
+import ConstraintCommons: ConstraintCommons, δ_extrema
+# import Dictionaries
+import PatternFolds: PatternFolds, Interval, Closed
+import StatsBase: sample
+import TestItems: @testitem
 
 # Exports
 export AbstractDomain
 export ContinuousDomain
 export DiscreteDomain
-# export DiscreteSet # not defined
 export ExploreSettings
 export RangeDomain
+export SetDomain
 
 export add!
 export delete!
