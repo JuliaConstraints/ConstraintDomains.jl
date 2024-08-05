@@ -27,7 +27,7 @@ domain(intervals::Vector{I}) where {I<:Interval} = Intervals(intervals)
     Base.length(itv::Intervals)
 Return the sum of the length of each interval in `itv`.
 """
-Base.length(itv::Intervals) = sum(size, get_domain(itv); init = 0)
+Base.length(itv::Intervals) = sum(size, get_domain(itv); init=0)
 
 """
     Base.rand(itv::Intervals)
