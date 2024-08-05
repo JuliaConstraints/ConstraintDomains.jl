@@ -13,7 +13,7 @@ Extends `Base.convert` for domains.
 """
 function Base.convert(::Type{Intervals}, d::RangeDomain{T}) where {T<:Real}
     a, b = extrema(get_domain(d))
-    return domain(Float64(a) .. Float64(b))
+    return domain(Interval{T,Closed,Closed}(a, b))
 end
 
 function Base.convert(::Type{RangeDomain}, d::Intervals{T}) where {T<:Real}
@@ -23,6 +23,6 @@ function Base.convert(::Type{RangeDomain}, d::Intervals{T}) where {T<:Real}
     return domain(a:b)
 end
 
-function Base.convert(::Type{RangeDomain}, d::SetDomain{T}) where {T<:Integer}
+function Base.convert(::Type{RangeDomain}, d::SetDomain)
     return domain(collect(get_domain(d)))
 end
