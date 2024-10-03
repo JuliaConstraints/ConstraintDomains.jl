@@ -2,7 +2,6 @@ module ConstraintDomains
 
 # SECTION - Imports
 import ConstraintCommons: ConstraintCommons, δ_extrema
-# import Dictionaries
 import PatternFolds: PatternFolds, Interval, Closed
 import StatsBase: sample
 import TestItems: @testitem
