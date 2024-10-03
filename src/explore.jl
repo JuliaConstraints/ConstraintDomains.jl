@@ -19,7 +19,7 @@ Settings for the exploration of a search space composed by a collection of domai
 function ExploreSettings(
     domains;
     complete_search_limit=10^6,
-    max_samplings=sum(domain_size, domains),
+    max_samplings=sum(domain_size, domains; init=0),
     search=:flexible,
     solutions_limit=floor(Int, sqrt(max_samplings)),
 )
@@ -36,9 +36,9 @@ end
 
 ExplorerState(domains) = ExplorerState{Union{map(eltype, domains)...}}()
 
-struct Explorer{F1<:Function,D<:AbstractDomain,F2<:Union{Function,Nothing},T}
-    concepts::Vector{F1}
-    domains::Vector{D}
+mutable struct Explorer{F1<:Function,D<:AbstractDomain,F2<:Union{Function,Nothing},T}
+    concepts::Dict{Int,F1}
+    domains::Dict{Int,D}
     objective::F2
     settings::ExploreSettings
     state::ExplorerState{T}
@@ -47,9 +47,19 @@ struct Explorer{F1<:Function,D<:AbstractDomain,F2<:Union{Function,Nothing},T}
         F1 = Union{map(typeof, concepts)...}
         D = Union{map(typeof, domains)...}
         F2 = typeof(objective)
-        T = Union{map(eltype, domains)...}
-        return new{F1,D,F2,T}(concepts, domains, objective, settings, ExplorerState{T}())
+        T = isempty(domains) ? Any : Union{map(eltype, domains)...}
+        d_c = Dict(enumerate(concepts))
+        d_d = Dict(enumerate(domains))
+        return new{F1,D,F2,T}(d_c, d_d, objective, settings, ExplorerState{T}())
     end
+end
+
+function Explorer()
+    concepts = Vector{Function}()
+    domains = Vector{AbstractDomain}()
+    objective = nothing
+    settings = ExploreSettings(domains)
+    return Explorer(concepts, domains, objective; settings)
 end
 
 function update_exploration!(explorer, f, c, search=explorer.settings.search)
@@ -83,7 +93,7 @@ function _explore!(explorer, f, ::Val{:partial})
 
     solutions = explorer.state.solutions
     non_sltns = explorer.state.non_solutions
-    domains = explorer.domains
+    domains = explorer.domains |> values
 
     for _ = 1:ms
         length(solutions) ≥ sl && length(non_sltns) ≥ sl && break
@@ -94,13 +104,13 @@ function _explore!(explorer, f, ::Val{:partial})
 end
 
 function _explore!(explorer, f, ::Val{:complete})
-    configurations = Base.Iterators.product(map(d -> get_domain(d), explorer.domains)...)
-    foreach(c -> update_exploration!(explorer, f, c, :complete), configurations)
+    C = Base.Iterators.product(map(d -> get_domain(d), explorer.domains |> values)...)
+    foreach(c -> update_exploration!(explorer, f, c, :complete), C)
     return nothing
 end
 
-function _explore!(explorer::Explorer)
-    c = x -> all([f(x) for f in explorer.concepts])
+function explore!(explorer::Explorer)
+    c = x -> all([f(x) for f in explorer.concepts |> values])
     s = explorer.settings
     search = s.search
     if search == :flexible
@@ -125,7 +135,7 @@ Beware that if the density of the solutions in the search space is low, `solutio
 function explore(domains, concept; settings=ExploreSettings(domains), parameters...)
     f = x -> concept(x; parameters...)
     explorer = Explorer([f], domains; settings)
-    _explore!(explorer)
+    explore!(explorer)
     return explorer.state.solutions, explorer.state.non_solutions
 end
 
@@ -135,4 +145,6 @@ end
     X, X̅ = explore(domains, allunique)
     @test length(X) == factorial(4)
     @test length(X̅) == 4^4 - factorial(4)
+
+    explorer = ConstraintDomains.Explorer()
 end

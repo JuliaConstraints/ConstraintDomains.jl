@@ -10,7 +10,7 @@ import TestItems: @testitem
 export AbstractDomain
 export ContinuousDomain
 export DiscreteDomain
-export ExploreSettings
+export Explore, ExploreSettings
 export RangeDomain
 export SetDomain
 
@@ -18,7 +18,7 @@ export add!
 export delete!
 export domain
 export domain_size
-export explore
+export explore, explore!
 export generate_parameters
 export get_domain
 export intersect_domains
