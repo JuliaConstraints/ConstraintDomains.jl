@@ -6,15 +6,23 @@ struct ExploreSettings
 end
 
 """
-    ExploreSettings(
-        domains;
-        complete_search_limit = 10^6,
-        max_samplings = sum(domain_size, domains),
-        search = :flexible,
-        solutions_limit = floor(Int, sqrt(max_samplings)),
-    )
+    ExploreSettings(domains; 
+                    complete_search_limit = 10^6, 
+                    max_samplings = sum(domain_size, domains), 
+                    search = :flexible, 
+                    solutions_limit = floor(Int, sqrt(max_samplings)))
 
-Settings for the exploration of a search space composed by a collection of domains.
+Create an `ExploreSettings` object to configure the exploration of a search space composed of a collection of domains.
+
+# Arguments
+- `domains`: A collection of domains to be explored.
+- `complete_search_limit`: An integer specifying the maximum limit for complete search iterations. Default is 10^6.
+- `max_samplings`: An integer specifying the maximum number of samplings. Default is the sum of domain sizes.
+- `search`: A symbol indicating the type of search to perform. Default is `:flexible`.
+- `solutions_limit`: An integer specifying the limit on the number of solutions. Default is the floor of the square root of `max_samplings`.
+
+# Returns
+- `ExploreSettings` object with the specified settings.
 """
 function ExploreSettings(
     domains;
@@ -153,17 +161,18 @@ function explore!(explorer::Explorer)
 end
 
 """
-    explore(domains, concept, param = nothing; search_limit = 1000, solutions_limit = 100)
+    explore(domains, concept; settings = ExploreSettings(domains), parameters...)
 
-Search (a part of) a search space and returns a pair of vector of configurations: `(solutions, non_solutions)`. If the search space size is over `search_limit`, then both `solutions` and `non_solutions` are limited to `solutions_limit`.
+Search (a part of) a search space and return a pair of vectors of configurations: `(solutions, non_solutions)`. The exploration behavior is determined based on the `settings`.
 
-Beware that if the density of the solutions in the search space is low, `solutions_limit` needs to be reduced. This process will be automatic in the future (simple reinforcement learning).
+# Arguments
+- `domains`: A collection of domains to be explored.
+- `concept`: The concept representing the constraint to be targeted.
+- `settings`: An optional `ExploreSettings` object to configure the exploration. Default is `ExploreSettings(domains)`.
+- `parameters...`: Additional parameters for the `concept`.
 
-# Arguments:
-- `domains`: a collection of domains
-- `concept`: the concept of the targeted constraint
-- `param`: an optional parameter of the constraint
-- `sol_number`: the required number of solutions (half of the number of configurations), default to `100`
+# Returns
+- A tuple of sets: `(solutions, non_solutions)`.
 """
 function explore(domains, concept; settings = ExploreSettings(domains), parameters...)
     f = x -> concept(x; parameters...)
