@@ -2,7 +2,6 @@ module ConstraintDomains
 
 # SECTION - Imports
 import ConstraintCommons: ConstraintCommons, δ_extrema
-# import Dictionaries
 import PatternFolds: PatternFolds, Interval, Closed
 import StatsBase: sample
 import TestItems: @testitem
@@ -11,7 +10,7 @@ import TestItems: @testitem
 export AbstractDomain
 export ContinuousDomain
 export DiscreteDomain
-export ExploreSettings
+export Explorer, ExploreSettings
 export RangeDomain
 export SetDomain
 
@@ -19,7 +18,7 @@ export add!
 export delete!
 export domain
 export domain_size
-export explore
+export explore, explore!
 export generate_parameters
 export get_domain
 export intersect_domains

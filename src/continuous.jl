@@ -114,7 +114,6 @@ function intersect_domains(
     return Intervals(new_itvls)
 end
 
-
 """
     Base.size(i::I) where {I <: Interval}
 

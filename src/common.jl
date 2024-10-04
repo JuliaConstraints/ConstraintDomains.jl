@@ -98,6 +98,9 @@ function Base.string(D::Vector{<:AbstractDomain})
 end
 Base.string(d::AbstractDomain) = replace(string(d.domain), " " => "")
 
+merge_domains(::EmptyDomain, d::D) where {D<:AbstractDomain} = d
+merge_domains(d::D, ::EmptyDomain) where {D<:AbstractDomain} = d
+
 ## SECTION - Test Items
 @testitem "EmptyDomain" tags = [:domains, :empty] begin
     ed = domain()
