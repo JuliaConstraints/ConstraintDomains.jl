@@ -18,10 +18,10 @@ Settings for the exploration of a search space composed by a collection of domai
 """
 function ExploreSettings(
     domains;
-    complete_search_limit=10^6,
-    max_samplings=sum(domain_size, domains; init=0),
-    search=:flexible,
-    solutions_limit=floor(Int, sqrt(max_samplings)),
+    complete_search_limit = 10^6,
+    max_samplings = sum(domain_size, domains; init = 0),
+    search = :flexible,
+    solutions_limit = floor(Int, sqrt(max_samplings)),
 )
     return ExploreSettings(complete_search_limit, max_samplings, search, solutions_limit)
 end
@@ -43,7 +43,12 @@ mutable struct Explorer{F1<:Function,D<:AbstractDomain,F2<:Union{Function,Nothin
     settings::ExploreSettings
     state::ExplorerState{T}
 
-    function Explorer(concepts, domains, objective=nothing; settings=ExploreSettings(domains))
+    function Explorer(
+        concepts,
+        domains,
+        objective = nothing;
+        settings = ExploreSettings(domains),
+    )
         F1 = isempty(concepts) ? Function : Union{map(c -> typeof(c[1]), concepts)...}
         D = isempty(domains) ? AbstractDomain : Union{map(typeof, domains)...}
         F2 = typeof(objective)
@@ -63,7 +68,7 @@ function Explorer()
 end
 
 function Base.push!(explorer::Explorer, concept::Tuple{Function,Vector{Int}})
-    max_key = maximum(keys(explorer.concepts); init=0)
+    max_key = maximum(keys(explorer.concepts); init = 0)
     explorer.concepts[max_key+1] = concept
     return max_key + 1
 end
@@ -74,7 +79,7 @@ function delete_concept!(explorer::Explorer, key::Int)
 end
 
 function Base.push!(explorer::Explorer, domain::AbstractDomain)
-    max_key = maximum(keys(explorer.domains); init=0)
+    max_key = maximum(keys(explorer.domains); init = 0)
     explorer.domains[max_key+1] = domain
     return max_key + 1
 end
@@ -86,7 +91,7 @@ end
 
 set!(explorer::Explorer, objective::Function) = explorer.objective = objective
 
-function update_exploration!(explorer, f, c, search=explorer.settings.search)
+function update_exploration!(explorer, f, c, search = explorer.settings.search)
     solutions = explorer.state.solutions
     non_sltns = explorer.state.non_solutions
     obj = explorer.objective
@@ -134,7 +139,11 @@ function _explore!(explorer, f, ::Val{:complete})
 end
 
 function explore!(explorer::Explorer)
-    c = x -> all([f(isempty(vars) ? x : @view x[vars]) for (f, vars) in explorer.concepts |> values])
+    c =
+        x -> all([
+            f(isempty(vars) ? x : @view x[vars]) for
+            (f, vars) in explorer.concepts |> values
+        ])
     s = explorer.settings
     search = s.search
     if search == :flexible
@@ -156,7 +165,7 @@ Beware that if the density of the solutions in the search space is low, `solutio
 - `param`: an optional parameter of the constraint
 - `sol_number`: the required number of solutions (half of the number of configurations), default to `100`
 """
-function explore(domains, concept; settings=ExploreSettings(domains), parameters...)
+function explore(domains, concept; settings = ExploreSettings(domains), parameters...)
     f = x -> concept(x; parameters...)
     explorer = Explorer([(f, Vector{Int}())], domains; settings)
     explore!(explorer)
