@@ -10,7 +10,7 @@ import TestItems: @testitem
 export AbstractDomain
 export ContinuousDomain
 export DiscreteDomain
-export Explore, ExploreSettings
+export Explorer, ExploreSettings
 export RangeDomain
 export SetDomain
 

@@ -16,7 +16,7 @@ function Base.convert(::Type{Intervals}, d::RangeDomain{T}) where {T<:Real}
     return domain(Interval{T,Closed,Closed}(a, b))
 end
 
-function Base.convert(::Type{RangeDomain}, d::Intervals{T}) where {T<:Real}
+function Base.convert(::Type{RangeDomain}, d::Intervals)
     i = get_domain(d)[1]
     a = Int(i.first)
     b = Int(i.last)

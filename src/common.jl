@@ -63,7 +63,7 @@ Convert various arguments into valid domains format.
 """
 to_domains(domain_sizes::Vector{Int}) = map(ds -> domain(0:ds), domain_sizes)
 
-function to_domains(X, ds::Int = δ_extrema(X) + 1)
+function to_domains(X, ds::Int=δ_extrema(X) + 1)
     d = domain(0:ds-1)
     return fill(d, length(first(X)))
 end
@@ -97,6 +97,9 @@ function Base.string(D::Vector{<:AbstractDomain})
     return replace("[$(prod(d -> string(d) * ',', D)[1:end-1])]", " " => "")
 end
 Base.string(d::AbstractDomain) = replace(string(d.domain), " " => "")
+
+merge_domains(::EmptyDomain, d::D) where {D<:AbstractDomain} = d
+merge_domains(d::D, ::EmptyDomain) where {D<:AbstractDomain} = d
 
 ## SECTION - Test Items
 @testitem "EmptyDomain" tags = [:domains, :empty] begin

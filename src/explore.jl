@@ -44,10 +44,10 @@ mutable struct Explorer{F1<:Function,D<:AbstractDomain,F2<:Union{Function,Nothin
     state::ExplorerState{T}
 
     function Explorer(concepts, domains, objective=nothing; settings=ExploreSettings(domains))
-        F1 = Union{map(typeof, concepts)...}
-        D = Union{map(typeof, domains)...}
+        F1 = isempty(concepts) ? Function : Union{map(typeof, concepts)...}
+        D = isempty(domains) ? AbstractDomain : Union{map(typeof, domains)...}
         F2 = typeof(objective)
-        T = isempty(domains) ? Any : Union{map(eltype, domains)...}
+        T = isempty(domains) ? Real : Union{map(eltype, domains)...}
         d_c = Dict(enumerate(concepts))
         d_d = Dict(enumerate(domains))
         return new{F1,D,F2,T}(d_c, d_d, objective, settings, ExplorerState{T}())
@@ -61,6 +61,30 @@ function Explorer()
     settings = ExploreSettings(domains)
     return Explorer(concepts, domains, objective; settings)
 end
+
+function Base.push!(explorer::Explorer, concept::Function)
+    max_key = maximum(keys(explorer.concepts))
+    explorer.concepts[max_key+1] = concept
+    return nothing
+end
+
+function delete_concept!(explorer::Explorer, key::Int)
+    delete!(explorer.concepts, key)
+    return nothing
+end
+
+function Base.push!(explorer::Explorer, domain::AbstractDomain)
+    max_key = maximum(keys(explorer.domains))
+    explorer.domains[max_key+1] = domain
+    return nothing
+end
+
+function delete_domain!(explorer::Explorer, key::Int)
+    delete!(explorer.domains, key)
+    return nothing
+end
+
+set!(explorer::Explorer, objective::Function) = explorer.objective = objective
 
 function update_exploration!(explorer, f, c, search=explorer.settings.search)
     solutions = explorer.state.solutions
