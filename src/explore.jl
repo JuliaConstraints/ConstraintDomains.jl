@@ -37,14 +37,14 @@ end
 ExplorerState(domains) = ExplorerState{Union{map(eltype, domains)...}}()
 
 mutable struct Explorer{F1<:Function,D<:AbstractDomain,F2<:Union{Function,Nothing},T}
-    concepts::Dict{Int,F1}
+    concepts::Dict{Int,Tuple{F1,Vector{Int}}}
     domains::Dict{Int,D}
     objective::F2
     settings::ExploreSettings
     state::ExplorerState{T}
 
     function Explorer(concepts, domains, objective=nothing; settings=ExploreSettings(domains))
-        F1 = isempty(concepts) ? Function : Union{map(typeof, concepts)...}
+        F1 = isempty(concepts) ? Function : Union{map(c -> typeof(c[1]), concepts)...}
         D = isempty(domains) ? AbstractDomain : Union{map(typeof, domains)...}
         F2 = typeof(objective)
         T = isempty(domains) ? Real : Union{map(eltype, domains)...}
@@ -55,17 +55,17 @@ mutable struct Explorer{F1<:Function,D<:AbstractDomain,F2<:Union{Function,Nothin
 end
 
 function Explorer()
-    concepts = Vector{Function}()
+    concepts = Vector{Tuple{Function,Vector{Int}}}()
     domains = Vector{AbstractDomain}()
     objective = nothing
     settings = ExploreSettings(domains)
     return Explorer(concepts, domains, objective; settings)
 end
 
-function Base.push!(explorer::Explorer, concept::Function)
-    max_key = maximum(keys(explorer.concepts))
+function Base.push!(explorer::Explorer, concept::Tuple{Function,Vector{Int}})
+    max_key = maximum(keys(explorer.concepts); init=0)
     explorer.concepts[max_key+1] = concept
-    return nothing
+    return max_key + 1
 end
 
 function delete_concept!(explorer::Explorer, key::Int)
@@ -74,9 +74,9 @@ function delete_concept!(explorer::Explorer, key::Int)
 end
 
 function Base.push!(explorer::Explorer, domain::AbstractDomain)
-    max_key = maximum(keys(explorer.domains))
+    max_key = maximum(keys(explorer.domains); init=0)
     explorer.domains[max_key+1] = domain
-    return nothing
+    return max_key + 1
 end
 
 function delete_domain!(explorer::Explorer, key::Int)
@@ -134,7 +134,7 @@ function _explore!(explorer, f, ::Val{:complete})
 end
 
 function explore!(explorer::Explorer)
-    c = x -> all([f(x) for f in explorer.concepts |> values])
+    c = x -> all([f(isempty(vars) ? x : @view x[vars]) for (f, vars) in explorer.concepts |> values])
     s = explorer.settings
     search = s.search
     if search == :flexible
@@ -158,7 +158,7 @@ Beware that if the density of the solutions in the search space is low, `solutio
 """
 function explore(domains, concept; settings=ExploreSettings(domains), parameters...)
     f = x -> concept(x; parameters...)
-    explorer = Explorer([f], domains; settings)
+    explorer = Explorer([(f, Vector{Int}())], domains; settings)
     explore!(explorer)
     return explorer.state.solutions, explorer.state.non_solutions
 end
