@@ -6,23 +6,31 @@ struct ExploreSettings
 end
 
 """
-    ExploreSettings(domains; 
-                    complete_search_limit = 10^6, 
-                    max_samplings = sum(domain_size, domains), 
-                    search = :flexible, 
-                    solutions_limit = floor(Int, sqrt(max_samplings)))
+    ExploreSettings(
+        domains;
+        complete_search_limit = 10^6,
+        max_samplings = sum(domain_size, domains),
+        search = :flexible,
+        solutions_limit = floor(Int, sqrt(max_samplings)),
+    )
 
-Create an `ExploreSettings` object to configure the exploration of a search space composed of a collection of domains.
+Create settings for the exploration of a search space composed by a collection of domains.
 
 # Arguments
-- `domains`: A collection of domains to be explored.
-- `complete_search_limit`: An integer specifying the maximum limit for complete search iterations. Default is 10^6.
-- `max_samplings`: An integer specifying the maximum number of samplings. Default is the sum of domain sizes.
-- `search`: A symbol indicating the type of search to perform. Default is `:flexible`.
-- `solutions_limit`: An integer specifying the limit on the number of solutions. Default is the floor of the square root of `max_samplings`.
+- `domains`: A collection of domains representing the search space.
+- `complete_search_limit`: Maximum size of the search space for complete search.
+- `max_samplings`: Maximum number of samples to take during partial search.
+- `search`: Search strategy (`:flexible`, `:complete`, or `:partial`).
+- `solutions_limit`: Maximum number of solutions to store.
 
 # Returns
-- `ExploreSettings` object with the specified settings.
+An `ExploreSettings` object.
+
+# Example
+```julia
+domains = [domain([1, 2, 3]), domain([4, 5, 6])]
+settings = ExploreSettings(domains, search = :complete)
+```
 """
 function ExploreSettings(
     domains;
@@ -50,21 +58,43 @@ mutable struct Explorer{F1<:Function,D<:AbstractDomain,F2<:Union{Function,Nothin
     objective::F2
     settings::ExploreSettings
     state::ExplorerState{T}
+end
 
-    function Explorer(
-        concepts,
-        domains,
-        objective = nothing;
-        settings = ExploreSettings(domains),
-    )
-        F1 = isempty(concepts) ? Function : Union{map(c -> typeof(c[1]), concepts)...}
-        D = isempty(domains) ? AbstractDomain : Union{map(typeof, domains)...}
-        F2 = typeof(objective)
-        T = isempty(domains) ? Real : Union{map(eltype, domains)...}
-        d_c = Dict(enumerate(concepts))
-        d_d = Dict(enumerate(domains))
-        return new{F1,D,F2,T}(d_c, d_d, objective, settings, ExplorerState{T}())
-    end
+"""
+Explorer(concepts, domains, objective = nothing; settings = ExploreSettings(domains))
+
+Create an Explorer object for searching a constraint satisfaction problem space.
+
+# Arguments
+- `concepts`: A collection of tuples, each containing a concept function and its associated variable indices.
+- `domains`: A collection of domains representing the search space.
+- `objective`: An optional objective function for optimization problems.
+- `settings`: An `ExploreSettings` object to configure the exploration process.
+
+# Returns
+An `Explorer` object ready for exploration.
+
+# Example
+```julia
+domains = [domain([1, 2, 3]), domain([4, 5, 6])]
+concepts = [(sum, [1, 2])]
+objective = x -> x[1] + x[2]
+explorer = Explorer(concepts, domains, objective)
+```
+"""
+function Explorer(
+    concepts,
+    domains,
+    objective = nothing;
+    settings = ExploreSettings(domains),
+)
+    F1 = isempty(concepts) ? Function : Union{map(c -> typeof(c[1]), concepts)...}
+    D = isempty(domains) ? AbstractDomain : Union{map(typeof, domains)...}
+    F2 = typeof(objective)
+    T = isempty(domains) ? Real : Union{map(eltype, domains)...}
+    d_c = Dict(enumerate(concepts))
+    d_d = Dict(enumerate(domains))
+    return Explorer{F1,D,F2,T}(d_c, d_d, objective, settings, ExplorerState{T}())
 end
 
 function Explorer()
@@ -75,28 +105,118 @@ function Explorer()
     return Explorer(concepts, domains, objective; settings)
 end
 
+"""
+    push!(explorer::Explorer, concept::Tuple{Function,Vector{Int}})
+
+Add a new concept to the `Explorer` object.
+
+# Arguments
+- `explorer`: The `Explorer` object to modify.
+- `concept`: A tuple containing a concept function and its associated variable indices.
+
+# Returns
+The key (index) of the newly added concept.
+
+# Example
+```julia
+explorer = Explorer()
+key = push!(explorer, (sum, [1, 2]))
+```
+"""
 function Base.push!(explorer::Explorer, concept::Tuple{Function,Vector{Int}})
     max_key = maximum(keys(explorer.concepts); init = 0)
     explorer.concepts[max_key+1] = concept
     return max_key + 1
 end
 
+"""
+    delete_concept!(explorer::Explorer, key::Int)
+
+Remove a concept from the `Explorer` object by its key.
+
+# Arguments
+- `explorer`: The `Explorer` object to modify.
+- `key`: The key (index) of the concept to remove.
+
+# Returns
+Nothing. The `Explorer` object is modified in-place.
+
+# Example
+```julia
+explorer = Explorer([(sum, [1, 2])], [domain([1, 2, 3])])
+delete_concept!(explorer, 1)
+```
+"""
 function delete_concept!(explorer::Explorer, key::Int)
     delete!(explorer.concepts, key)
     return nothing
 end
 
+"""
+    push!(explorer::Explorer, domain::AbstractDomain)
+
+Add a new domain to the `Explorer` object.
+
+# Arguments
+- `explorer`: The `Explorer` object to modify.
+- `domain`: An `AbstractDomain` object to add to the search space.
+
+# Returns
+The key (index) of the newly added domain.
+
+# Example
+```julia
+explorer = Explorer()
+key = push!(explorer, domain([1, 2, 3]))
+```
+"""
 function Base.push!(explorer::Explorer, domain::AbstractDomain)
     max_key = maximum(keys(explorer.domains); init = 0)
     explorer.domains[max_key+1] = domain
     return max_key + 1
 end
 
+"""
+    delete_domain!(explorer::Explorer, key::Int)
+
+Remove a domain from the `Explorer` object by its key.
+
+# Arguments
+- `explorer`: The `Explorer` object to modify.
+- `key`: The key (index) of the domain to remove.
+
+# Returns
+Nothing. The `Explorer` object is modified in-place.
+
+# Example
+```julia
+explorer = Explorer([], [domain([1, 2, 3])])
+delete_domain!(explorer, 1)
+```
+"""
 function delete_domain!(explorer::Explorer, key::Int)
     delete!(explorer.domains, key)
     return nothing
 end
 
+"""
+    set!(explorer::Explorer, objective::Function)
+
+Set the objective function for the `Explorer` object.
+
+# Arguments
+- `explorer`: The `Explorer` object to modify.
+- `objective`: A function to use as the objective for optimization.
+
+# Returns
+Nothing. The `Explorer` object is modified in-place.
+
+# Example
+```julia
+explorer = Explorer()
+set!(explorer, x -> sum(x))
+```
+"""
 set!(explorer::Explorer, objective::Function) = explorer.objective = objective
 
 function update_exploration!(explorer, f, c, search = explorer.settings.search)
@@ -122,7 +242,7 @@ end
 """
     _explore(args...)
 
-Internals of the `explore` function. Behavior is automatically adjusted on the kind of exploration: `:flexible`, `:complete`, `:partial`.
+Internals of the `explore!` function. Behavior is automatically adjusted on the kind of exploration: `:flexible`, `:complete`, `:partial`.
 """
 function _explore!(explorer, f, ::Val{:partial})
     sl = explorer.settings.solutions_limit
@@ -146,6 +266,27 @@ function _explore!(explorer, f, ::Val{:complete})
     return nothing
 end
 
+"""
+    explore!(explorer::Explorer)
+
+Perform exploration on the search space defined by the `Explorer` object.
+
+This function explores the search space according to the settings specified in the `Explorer` object.
+It updates the `Explorer`'s state with found solutions and non-solutions.
+
+# Arguments
+- `explorer`: An `Explorer` object containing the problem definition and exploration settings.
+
+# Returns
+Nothing. The `Explorer`'s state is updated in-place.
+
+# Example
+```julia
+explorer = Explorer(concepts, domains)
+explore!(explorer)
+println("Solutions found: ", length(explorer.state.solutions))
+```
+"""
 function explore!(explorer::Explorer)
     c =
         x -> all([
@@ -160,19 +301,26 @@ function explore!(explorer::Explorer)
     return _explore!(explorer, c, Val(search))
 end
 
+
 """
     explore(domains, concept; settings = ExploreSettings(domains), parameters...)
 
-Search (a part of) a search space and return a pair of vectors of configurations: `(solutions, non_solutions)`. The exploration behavior is determined based on the `settings`.
+Explore a search space defined by domains and a concept.
 
 # Arguments
-- `domains`: A collection of domains to be explored.
-- `concept`: The concept representing the constraint to be targeted.
-- `settings`: An optional `ExploreSettings` object to configure the exploration. Default is `ExploreSettings(domains)`.
-- `parameters...`: Additional parameters for the `concept`.
+- `domains`: A collection of domains representing the search space.
+- `concept`: The concept function defining the constraint.
+- `settings`: An `ExploreSettings` object to configure the exploration process.
+- `parameters`: Additional parameters to pass to the concept function.
 
 # Returns
-- A tuple of sets: `(solutions, non_solutions)`.
+A tuple containing two sets: (solutions, non_solutions).
+
+# Example
+```julia
+domains = [domain([1, 2, 3]), domain([4, 5, 6])]
+solutions, non_solutions = explore(domains, allunique)
+```
 """
 function explore(domains, concept; settings = ExploreSettings(domains), parameters...)
     f = x -> concept(x; parameters...)
