@@ -34,10 +34,10 @@ settings = ExploreSettings(domains, search = :complete)
 """
 function ExploreSettings(
     domains;
-    complete_search_limit=10^6,
-    max_samplings=sum(domain_size, domains; init=0),
-    search=:flexible,
-    solutions_limit=floor(Int, sqrt(max_samplings)),
+    complete_search_limit = 10^6,
+    max_samplings = sum(domain_size, domains; init = 0),
+    search = :flexible,
+    solutions_limit = floor(Int, sqrt(max_samplings)),
 )
     return ExploreSettings(complete_search_limit, max_samplings, search, solutions_limit)
 end
@@ -85,8 +85,8 @@ explorer = Explorer(concepts, domains, objective)
 function Explorer(
     concepts,
     domains,
-    objective=nothing;
-    settings=ExploreSettings(domains),
+    objective = nothing;
+    settings = ExploreSettings(domains),
 )
     F1 = isempty(concepts) ? Function : Union{map(c -> typeof(c[1]), concepts)...}
     D = isempty(domains) ? AbstractDomain : Union{map(typeof, domains)...}
@@ -124,7 +124,7 @@ key = push!(explorer, (sum, [1, 2]))
 ```
 """
 function Base.push!(explorer::Explorer, concept::Tuple{Function,Vector{Int}})
-    max_key = maximum(keys(explorer.concepts); init=0)
+    max_key = maximum(keys(explorer.concepts); init = 0)
     explorer.concepts[max_key+1] = concept
     return max_key + 1
 end
@@ -171,7 +171,7 @@ key = push!(explorer, domain([1, 2, 3]))
 ```
 """
 function Base.push!(explorer::Explorer, domain::AbstractDomain)
-    max_key = maximum(keys(explorer.domains); init=0)
+    max_key = maximum(keys(explorer.domains); init = 0)
     explorer.domains[max_key+1] = domain
     return max_key + 1
 end
@@ -219,7 +219,7 @@ set!(explorer, x -> sum(x))
 """
 set!(explorer::Explorer, objective::Function) = explorer.objective = objective
 
-function update_exploration!(explorer, f, c, search=explorer.settings.search)
+function update_exploration!(explorer, f, c, search = explorer.settings.search)
     solutions = explorer.state.solutions
     non_sltns = explorer.state.non_solutions
     obj = explorer.objective
@@ -322,7 +322,7 @@ domains = [domain([1, 2, 3]), domain([4, 5, 6])]
 solutions, non_solutions = explore(domains, allunique)
 ```
 """
-function explore(domains, concept; settings=ExploreSettings(domains), parameters...)
+function explore(domains, concept; settings = ExploreSettings(domains), parameters...)
     f = x -> concept(x; parameters...)
     explorer = Explorer([(f, Vector{Int}())], domains; settings)
     explore!(explorer)
