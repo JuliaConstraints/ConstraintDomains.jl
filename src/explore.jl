@@ -6,10 +6,10 @@ struct ExploreSettings
 end
 
 """
-    ExploreSettings(domains; 
-                    complete_search_limit = 10^6, 
-                    max_samplings = sum(domain_size, domains), 
-                    search = :flexible, 
+    ExploreSettings(domains;
+                    complete_search_limit = 10^6,
+                    max_samplings = sum(domain_size, domains),
+                    search = :flexible,
                     solutions_limit = floor(Int, sqrt(max_samplings)))
 
 Create an `ExploreSettings` object to configure the exploration of a search space composed of a collection of domains.
@@ -124,7 +124,7 @@ end
 
 Internals of the `explore` function. Behavior is automatically adjusted on the kind of exploration: `:flexible`, `:complete`, `:partial`.
 """
-function _explore!(explorer, f, ::Val{:partial})
+function _explore!(explorer, f, ::Val{:partial};)
     sl = explorer.settings.solutions_limit
     ms = explorer.settings.max_samplings
 
@@ -179,6 +179,16 @@ function explore(domains, concept; settings = ExploreSettings(domains), paramete
     explorer = Explorer([(f, Vector{Int}())], domains; settings)
     explore!(explorer)
     return explorer.state.solutions, explorer.state.non_solutions
+end
+
+function _check!(explorer, configurations)
+    g =
+        x -> all([
+            f(isempty(vars) ? x : @view x[vars]) for
+            (f, vars) in explorer.concepts |> values
+        ])
+    foreach(c -> update_exploration!(explorer, g, c, :complete), configurations)
+    return nothing
 end
 
 ## SECTION - Test Items
