@@ -44,10 +44,10 @@ end
 
 struct ExplorerState{T}
     best::Vector{T}
-    solutions::Set{Vector{T}}
-    non_solutions::Set{Vector{T}}
+    solutions::Vector{Vector{T}}
+    non_solutions::Vector{Vector{T}}
 
-    ExplorerState{T}() where {T} = new{T}([], Set{Vector{T}}(), Set{Vector{T}}())
+    ExplorerState{T}() where {T} = new{T}(Vector{T}(), Vector{Vector{T}}(), Vector{Vector{T}}())
 end
 
 ExplorerState(domains) = ExplorerState{Union{map(eltype, domains)...}}()
@@ -257,6 +257,8 @@ function _explore!(explorer, f, ::Val{:partial};)
         config = map(rand, domains)
         update_exploration!(explorer, f, config)
     end
+    unique!(explorer.state.solutions)
+    unique!(explorer.state.non_solutions)
     return nothing
 end
 
