@@ -1,0 +1,23 @@
+schema_version = "perfchecker-scenario-catalog/1"
+root = ".."
+
+[[scenarios]]
+source = "range_cases.jl"
+factory = "RangeCases.span"
+collectors = ["benchmark", "chairmark", "profile", "profile_alloc"]
+id = "numeric-range-domain-span"
+implementation = "current"
+
+    [scenarios.parameters]
+    method = "current"
+    n = 1000
+[[scenarios]]
+source = "range_cases.jl"
+factory = "RangeCases.span"
+collectors = ["benchmark", "chairmark"]
+id = "numeric-range-domain-span"
+implementation = "original"
+
+    [scenarios.parameters]
+    method = "original"
+    n = 1000
