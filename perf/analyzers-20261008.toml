@@ -359,3 +359,276 @@ quality = "not_checked"
 findings = []
 
     [diagnostics.measurements]
+
+[final_dependency_refresh]
+recorded_utc = "2026-10-09T04:49:41.305"
+reason = "Earlier standalone ConstraintDomains operation diagnostics used an earlier ConstraintCommons range shortcut. Requalify the prepared operation with final published ConstraintCommons 98cb947 after its numeric representation/BigInt repairs; ConstraintDomains runtime source remains identical."
+quality_limitations = "Earlier Aqua findings concerning missing compatibility bounds for five existing test extras remain recorded. This scoped operation refresh makes no package-wide static quality, native-solver, cold-start, universal zero-allocation or controlled speed claim."
+record_only_change = true
+cleanup = "PerfChecker worker requests/responses/logs live inside auto-removed mktempdir do-blocks. No reports path requested; no helper scripts or raw reports persisted. All fingerprinted package sources and the diagnostics manifest unchanged."
+
+    [final_dependency_refresh.analyzer_evidence]
+    diagnostic_manifest_sha256 = "10b7ae47f6bef299009e6dca7075b75f3bca4e77bb1c9c21b83dd84fe2de1c1e"
+    recorded_utc = "2026-10-09T04:47:02.656"
+    case_sha256 = "febe53889bb013a97cf3af36a726028cae8e11f4502ddf9981fcf2b675f827b8"
+    scope = "Four fresh complete prepared domain-size operation analyzer specializations at n=1000, current published range/domain dependencies. No package-wide static-clean or controlled speed claim."
+    julia_threads = 2
+    cpu_affinity = [4, 6]
+    constraintdomains_commit = "19b4b9082ac3588e417d0c711f961dd5008e8653"
+    blas_threads = 1
+    gc_threads = 1
+    runtime = "1.13.1"
+    constraintcommons_commit = "98cb9470250aa55ed19e35b78c133a98b56b5bdb"
+
+        [final_dependency_refresh.analyzer_evidence.source_hashes]
+        "ConstraintDomains/src/general.jl" = "41232fe3a81a37221593b737d048ecd5e1217a8c048cef75485336e91da8d5ff"
+        "ConstraintCommons/src/diagrams.jl" = "f6a2ad01d068fba459fd06ea09f378eeab1b74f2276d4909ebe4a8a9d75c2eb4"
+        "ConstraintDomains/src/discrete.jl" = "d64325cc8b25f2abe77da7e33bee4b8e11a267230f28cba66c8c31205c7e3b93"
+        "ConstraintDomains/src/continuous.jl" = "bfb43b2a39879a967f0aa906c2ec7d64663e2e1462819677738a6f381a80523c"
+        "ConstraintCommons/src/dictionaries.jl" = "8c5ba7d6db13058ede187ee39789eed782f78321aa4854a9215edfa0c43ed6a0"
+        "ConstraintCommons/src/ConstraintCommons.jl" = "ff29e87a02f55b947580279969339e54672dcbda5ef57ef27be0231bcda7d55a"
+        "ConstraintDomains/src/explore.jl" = "715d54ee852897c977ac48dd751f066fcdfa94f27ca62e44f767e4ed654601d8"
+        "ConstraintCommons/src/automata.jl" = "a17c3d50e169bf621f98dfa86cb255a60b1601f784d533cf89e8a02e2b385f45"
+        "ConstraintCommons/src/nothing.jl" = "cce38fef0dada485d3abc61aba267b8c6e34c4f13a115038302c0657d7381ed5"
+        "ConstraintCommons/src/parameters.jl" = "fdd02f7683958e083d537696cd11d26326e7dc7dad8130fb72be5eda6260fd57"
+        "ConstraintCommons/src/sampling.jl" = "759b20ec85a072bc4d4e47a63d4b48ce3c0dc957fcc29a04aa1c848194d8ab9d"
+        "ConstraintCommons/src/extrema.jl" = "13e0ba01474111dddf4df68155794186d6f63f32bd1af5780d6e21d44804eb0e"
+        "ConstraintDomains/src/ConstraintDomains.jl" = "a682795a17ddd8712e9b37c4c77784a58c4a92df5eef9c9972b95aeaa132e834"
+        "ConstraintDomains/src/parameters.jl" = "0d4494a60aa430682faad44ec12654725f31b14ab4c609c7a95bc2d6f6eec1ed"
+        "ConstraintCommons/src/symbols.jl" = "46742662cc6b92ccf8e3df02176fde49296fbdbeea546f41772830b50f6aeaf4"
+        "ConstraintDomains/src/common.jl" = "0f9eb3d3088cc4dbda38cc42b0d82ee8a40f7285ca71eb9cc678ba71b3c2e785"
+
+        [[final_dependency_refresh.analyzer_evidence.analyzers]]
+        correctness = "passed"
+        summary = ""
+        status = "complete"
+        analysis_scope = "operation specialized for prepared state type; synchronization excluded"
+        tool = "jet"
+        implementation = "current"
+        quality = "not_checked"
+        findings_count = 0
+
+            [final_dependency_refresh.analyzer_evidence.analyzers.measurements]
+        [[final_dependency_refresh.analyzer_evidence.analyzers]]
+        correctness = "passed"
+        summary = ""
+        status = "complete"
+        analysis_scope = "static operation specialization; tool exception-path defaults; not a universal allocation guarantee"
+        tool = "alloccheck"
+        implementation = "current"
+        quality = "not_checked"
+        findings_count = 0
+
+            [final_dependency_refresh.analyzer_evidence.analyzers.measurements]
+        [[final_dependency_refresh.analyzer_evidence.analyzers]]
+        limitations = ["Diagnostic instrumentation is separate from baseline timing.", "GC counters are process-wide and can include concurrently running tasks.", "No observed collection is not evidence that the workload never triggers GC."]
+        correctness = "passed"
+        summary = "5 operations: 0.0 ms in GC, 0 allocated bytes in total. Diagnostic counters are process-wide."
+        status = "complete"
+        findings_count = 0
+        analysis_scope = "warmed operation and synchronization; fresh state; preparation, verification and cleanup excluded"
+        tool = "gc"
+        implementation = "current"
+        quality = "not_checked"
+
+            [final_dependency_refresh.analyzer_evidence.analyzers.measurements]
+            samples = 5
+
+                [final_dependency_refresh.analyzer_evidence.analyzers.measurements.full_sweep]
+                minimum = 0
+                maximum = 0
+
+                [final_dependency_refresh.analyzer_evidence.analyzers.measurements.operation_seconds]
+                minimum = 5.7e-8
+                maximum = 5.18e-7
+
+                [final_dependency_refresh.analyzer_evidence.analyzers.measurements.lock_conflicts]
+                minimum = 0
+                maximum = 0
+
+                [final_dependency_refresh.analyzer_evidence.analyzers.measurements.malloc]
+                minimum = 0
+                maximum = 0
+
+                [final_dependency_refresh.analyzer_evidence.analyzers.measurements.gc_seconds]
+                minimum = 0.0
+                maximum = 0.0
+
+                [final_dependency_refresh.analyzer_evidence.analyzers.measurements.bigalloc]
+                minimum = 0
+                maximum = 0
+
+                [final_dependency_refresh.analyzer_evidence.analyzers.measurements.poolalloc]
+                minimum = 0
+                maximum = 0
+
+                [final_dependency_refresh.analyzer_evidence.analyzers.measurements.compile_time]
+                minimum = 0.0
+                maximum = 0.0
+
+                [final_dependency_refresh.analyzer_evidence.analyzers.measurements.allocated_bytes]
+                minimum = 0
+                maximum = 0
+
+                [final_dependency_refresh.analyzer_evidence.analyzers.measurements.recompile_time]
+                minimum = 0.0
+                maximum = 0.0
+
+                [final_dependency_refresh.analyzer_evidence.analyzers.measurements.realloc]
+                minimum = 0
+                maximum = 0
+
+                [final_dependency_refresh.analyzer_evidence.analyzers.measurements.pause]
+                minimum = 0
+                maximum = 0
+        [[final_dependency_refresh.analyzer_evidence.analyzers]]
+        correctness = "passed"
+        summary = "5 operations: reachable state changed by 0 to 0 bytes. Growth may be intended output or a cache; it does not establish a leak."
+        status = "complete"
+        findings_count = 0
+        tool = "memory"
+        implementation = "current"
+        quality = "not_checked"
+        limitations = ["Reachable state growth may be an intended result or cache, not a leak.", "Process memory includes Julia, allocator retention and unrelated tasks; two points do not measure an operation peak.", "State and result are traversed together to avoid double-counting shared Julia objects; native/device allocations require their own provider."]
+
+            [final_dependency_refresh.analyzer_evidence.analyzers.measurements]
+            samples = 5
+
+                [final_dependency_refresh.analyzer_evidence.analyzers.measurements.state_before_bytes]
+                minimum = 32
+                maximum = 32
+
+                [final_dependency_refresh.analyzer_evidence.analyzers.measurements.state_after_bytes]
+                minimum = 32
+                maximum = 32
+
+                [final_dependency_refresh.analyzer_evidence.analyzers.measurements.state_and_result_bytes]
+                minimum = 40
+                maximum = 40
+
+    [final_dependency_refresh.matched_evidence]
+    runtime = "1.13.1"
+    recorded_utc = "2026-10-09T04:48:10.883"
+    gc_threads = 1
+    case_sha256 = "febe53889bb013a97cf3af36a726028cae8e11f4502ddf9981fcf2b675f827b8"
+    scope = "Complete prepared domain-size operation compared with the unchanged original observation traversal at lengths 0/1/2/1000; former/current/current/former, 100 BenchmarkTools samples evals=1. Original input range is identical to the domain's range. All bytes/objects zero and warmed compilation/recompilation zero. Operational timings only."
+    julia_threads = 2
+    blas_threads = 1
+    cpu_affinity = [4, 6]
+
+        [[final_dependency_refresh.matched_evidence.measurements]]
+        bytes = 0
+        n = 0
+        result = +inf
+        implementation = "former"
+        objects = 0
+        minimum_ns = 12.0
+        [[final_dependency_refresh.matched_evidence.measurements]]
+        bytes = 0
+        n = 0
+        result = +inf
+        implementation = "current"
+        objects = 0
+        minimum_ns = 12.0
+        [[final_dependency_refresh.matched_evidence.measurements]]
+        bytes = 0
+        n = 0
+        result = +inf
+        implementation = "current-repeat"
+        objects = 0
+        minimum_ns = 12.0
+        [[final_dependency_refresh.matched_evidence.measurements]]
+        bytes = 0
+        n = 0
+        result = +inf
+        implementation = "former-repeat"
+        objects = 0
+        minimum_ns = 12.0
+        [[final_dependency_refresh.matched_evidence.measurements]]
+        bytes = 0
+        n = 1
+        result = 0
+        implementation = "former"
+        objects = 0
+        minimum_ns = 12.0
+        [[final_dependency_refresh.matched_evidence.measurements]]
+        bytes = 0
+        n = 1
+        result = 0
+        implementation = "current"
+        objects = 0
+        minimum_ns = 12.0
+        [[final_dependency_refresh.matched_evidence.measurements]]
+        bytes = 0
+        n = 1
+        result = 0
+        implementation = "current-repeat"
+        objects = 0
+        minimum_ns = 13.0
+        [[final_dependency_refresh.matched_evidence.measurements]]
+        bytes = 0
+        n = 1
+        result = 0
+        implementation = "former-repeat"
+        objects = 0
+        minimum_ns = 12.0
+        [[final_dependency_refresh.matched_evidence.measurements]]
+        bytes = 0
+        n = 2
+        result = 1
+        implementation = "former"
+        objects = 0
+        minimum_ns = 13.0
+        [[final_dependency_refresh.matched_evidence.measurements]]
+        bytes = 0
+        n = 2
+        result = 1
+        implementation = "current"
+        objects = 0
+        minimum_ns = 12.0
+        [[final_dependency_refresh.matched_evidence.measurements]]
+        bytes = 0
+        n = 2
+        result = 1
+        implementation = "current-repeat"
+        objects = 0
+        minimum_ns = 12.0
+        [[final_dependency_refresh.matched_evidence.measurements]]
+        bytes = 0
+        n = 2
+        result = 1
+        implementation = "former-repeat"
+        objects = 0
+        minimum_ns = 13.0
+        [[final_dependency_refresh.matched_evidence.measurements]]
+        bytes = 0
+        n = 1000
+        result = 999
+        implementation = "former"
+        objects = 0
+        minimum_ns = 204.0
+        [[final_dependency_refresh.matched_evidence.measurements]]
+        bytes = 0
+        n = 1000
+        result = 999
+        implementation = "current"
+        objects = 0
+        minimum_ns = 12.0
+        [[final_dependency_refresh.matched_evidence.measurements]]
+        bytes = 0
+        n = 1000
+        result = 999
+        implementation = "current-repeat"
+        objects = 0
+        minimum_ns = 12.0
+        [[final_dependency_refresh.matched_evidence.measurements]]
+        bytes = 0
+        n = 1000
+        result = 999
+        implementation = "former-repeat"
+        objects = 0
+        minimum_ns = 205.0
+
+        [final_dependency_refresh.matched_evidence.source_hashes]
+        ConstraintCommons = "13e0ba01474111dddf4df68155794186d6f63f32bd1af5780d6e21d44804eb0e"
+        ConstraintDomains = "a682795a17ddd8712e9b37c4c77784a58c4a92df5eef9c9972b95aeaa132e834"
