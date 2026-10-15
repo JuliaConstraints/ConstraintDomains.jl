@@ -2,7 +2,8 @@ module ConstraintDomains
 
 # SECTION - Imports
 import ConstraintCommons: ConstraintCommons, δ_extrema
-import PatternFolds: PatternFolds, Interval, Closed
+import PatternFolds
+import Intervals: Interval, Closed
 import Random: AbstractRNG, default_rng, randperm
 import StatsBase: sample
 import TestItems: @testitem

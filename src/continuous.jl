@@ -6,7 +6,7 @@ abstract type ContinuousDomain{T<:Real} <: AbstractDomain end
 
 """
     Intervals{T <: Real} <: ContinuousDomain{T}
-An encapsuler to store a vector of `PatternFolds.Interval`. Dynamic changes to `Intervals` are not handled yet.
+An encapsuler to store a vector of `Intervals.Interval`. Dynamic changes to `Intervals` are not handled yet.
 """
 struct Intervals{T<:Real,I<:Interval{T}} <: ContinuousDomain{T}
     domain::Vector{I}
